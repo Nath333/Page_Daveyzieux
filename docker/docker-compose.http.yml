@@ -6,9 +6,11 @@ services:
     build:
       context: ..
       dockerfile: docker/nginx/http/Dockerfile
-    container_name: page-daveyzieux-nginx
+    container_name: page-daveyzieux-nginx-http
     ports:
-      - "3001:80"
+      - "80:80"
+    volumes:
+      - ./certbot/www:/var/www/certbot:ro
     depends_on:
       app:
         condition: service_healthy
