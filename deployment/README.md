@@ -131,7 +131,36 @@ Enter your DuckDNS domain: page-daveyzieux
 
 ## 📖 Quick Start
 
-### First Time Deployment
+### Deployment Methods
+
+#### Method 1: Git Push & Pull (Recommended) ⭐
+
+**Best for**: Regular updates, fastest workflow
+
+**On Your Local Machine (Windows):**
+```bash
+git add .
+git commit -m "Update application"
+git push origin main
+```
+
+**On Your Ubuntu Server:**
+```bash
+cd Page_Daveyzieux
+git pull origin main
+cd docker
+docker compose -f docker-compose.https.yml down
+docker compose -f docker-compose.https.yml up -d --build
+```
+
+**Why this method?**
+- ✅ Fastest - no image registry needed
+- ✅ Simple - push code and rebuild on server
+- ✅ Always up-to-date with latest source
+
+---
+
+#### Method 2: First Time Deployment
 
 **For production (HTTPS)**:
 ```bash
@@ -160,19 +189,17 @@ cd Page_Daveyzieux
 
 ---
 
-## 🔄 Update Existing Deployment
+#### Method 3: Pre-built Images from GHCR (Advanced)
+
+**Best for**: Production environments, no build time on server
 
 ```bash
-# Pull latest code
-git pull
-
-# Rebuild and restart
-cd docker
-docker compose -f docker-compose.https.yml up -d --build
-
-# Or use the script
-./deployment/deploy-https.sh
+cd Page_Daveyzieux/docker
+docker compose -f docker-compose.ghcr.yml pull
+docker compose -f docker-compose.ghcr.yml up -d
 ```
+
+See [../docker/GHCR.md](../docker/GHCR.md) for complete guide.
 
 ---
 

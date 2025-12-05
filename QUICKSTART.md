@@ -4,9 +4,47 @@
 
 ---
 
-## 🚀 Deploy in 3 Commands
+## 🚀 Deployment Methods
 
-### HTTPS Production (Recommended)
+### Method 1: Git Push & Pull (Fastest - Recommended) ⭐
+
+**On Your Local Machine (Windows):**
+```bash
+git add .
+git commit -m "Update application"
+git push origin main
+```
+
+**On Your Ubuntu Server:**
+```bash
+cd Page_Daveyzieux
+git pull origin main
+cd docker
+docker compose -f docker-compose.https.yml down
+docker compose -f docker-compose.https.yml up -d --build
+```
+
+**Why this method?**
+- ✅ Fastest - no image registry needed
+- ✅ Simple - just push code and rebuild
+- ✅ Always up-to-date with latest code
+
+---
+
+### Method 2: Pre-built Images from GHCR (Advanced)
+
+**On Your Ubuntu Server:**
+```bash
+cd Page_Daveyzieux/docker
+docker compose -f docker-compose.ghcr.yml pull
+docker compose -f docker-compose.ghcr.yml up -d
+```
+
+See [docker/GHCR.md](docker/GHCR.md) for complete guide.
+
+---
+
+### Method 3: First Time Setup (HTTPS with Let's Encrypt)
 
 ```bash
 git clone https://github.com/Nath333/Page_Daveyzieux.git
@@ -18,7 +56,7 @@ cd Page_Daveyzieux
 
 ---
 
-### HTTP Testing (Development)
+### Method 4: HTTP Testing (Development)
 
 ```bash
 git clone https://github.com/Nath333/Page_Daveyzieux.git
@@ -89,11 +127,13 @@ docker compose -f docker-compose.https.yml up -d --build
 ## 💡 Quick Commands
 
 ```bash
-# Deploy HTTPS (automated)
-./deployment/deploy-https.sh
+# Update from git (recommended)
+git pull origin main
+cd docker && docker compose -f docker-compose.https.yml down
+docker compose -f docker-compose.https.yml up -d --build
 
-# Deploy HTTP (manual)
-cd docker && docker compose -f docker-compose.http.yml up -d --build
+# Deploy HTTPS (first time)
+./deployment/deploy-https.sh
 
 # View logs
 cd docker && docker compose -f docker-compose.https.yml logs -f
@@ -101,8 +141,8 @@ cd docker && docker compose -f docker-compose.https.yml logs -f
 # Stop
 cd docker && docker compose -f docker-compose.https.yml down
 
-# Update
-git pull && cd docker && docker compose -f docker-compose.https.yml up -d --build
+# Deploy HTTP (development)
+cd docker && docker compose -f docker-compose.http.yml up -d --build
 ```
 
 ---

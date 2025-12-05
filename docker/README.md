@@ -19,14 +19,40 @@ docker/
 │   ├── conf/                       # SSL certificates
 │   └── www/                        # Certbot challenges
 ├── docker-compose.http.yml         # HTTP deployment
-├── docker-compose.https.yml        # HTTPS deployment (production)
+├── docker-compose.https.yml        # HTTPS deployment (production) ⭐
+├── docker-compose.ghcr.yml         # GHCR pre-built images (advanced)
+├── GHCR.md                         # GitHub Container Registry guide
 ├── .dockerignore                   # Docker ignore rules
 └── README.md                       # This file
 ```
 
 ## 🚀 Quick Start
 
-### HTTP Deployment (Development/Testing)
+### Recommended Workflow: Git Push & Pull ⭐
+
+**On Local Machine (Windows):**
+```bash
+git add .
+git commit -m "Update application"
+git push origin main
+```
+
+**On Ubuntu Server:**
+```bash
+cd Page_Daveyzieux
+git pull origin main
+cd docker
+docker compose -f docker-compose.https.yml down
+docker compose -f docker-compose.https.yml up -d --build
+```
+
+This is the fastest and simplest deployment method.
+
+---
+
+### Other Deployment Methods
+
+#### HTTP Deployment (Development/Testing)
 
 ```bash
 cd docker
@@ -35,14 +61,26 @@ docker compose -f docker-compose.http.yml up -d --build
 
 **Access**: http://localhost:3001
 
-### HTTPS Deployment (Production)
+#### HTTPS Deployment (First Time Setup)
 
 ```bash
 # From project root
-./deploy-https.sh
+./deployment/deploy-https.sh
 ```
 
 **Access**: https://your-domain.duckdns.org
+
+#### Pre-built Images from GHCR (Advanced)
+
+```bash
+cd docker
+docker compose -f docker-compose.ghcr.yml pull
+docker compose -f docker-compose.ghcr.yml up -d
+```
+
+See [GHCR.md](GHCR.md) for complete guide.
+
+---
 
 ## 🔧 Docker Images
 
