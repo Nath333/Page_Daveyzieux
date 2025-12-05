@@ -28,10 +28,9 @@ docker-compose*.yml
 .env
 .env.*
 
-# Docker data
-docker/certbot/
-docker/nginx/http/
-docker/nginx/https/
+# Docker data (only exclude certbot runtime data)
+docker/certbot/conf/
+docker/certbot/www/
 
 # Windows
 *.bat
