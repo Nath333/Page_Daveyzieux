@@ -111,13 +111,29 @@ success "Existing containers stopped"
 
 echo ""
 info "========================================="
-info "  Obtaining SSL Certificate"
+info "  Configuring Firewall & Obtaining SSL"
 info "========================================="
 echo ""
 
+# Configure firewall FIRST
+if command -v ufw &> /dev/null; then
+    info "Opening ports 80 and 443 in firewall..."
+    sudo ufw allow 80/tcp > /dev/null 2>&1 || true
+    sudo ufw allow 443/tcp > /dev/null 2>&1 || true
+    success "Firewall ports opened"
+fi
+
 # Wait for DNS propagation
-info "Waiting 10 seconds for DNS propagation..."
-sleep 10
+info "Waiting 60 seconds for DNS propagation..."
+sleep 60
+
+# Verify DNS is working
+info "Verifying DNS resolution..."
+if nslookup $FULL_DOMAIN > /dev/null 2>&1; then
+    success "DNS resolves correctly"
+else
+    warning "DNS may not be fully propagated yet"
+fi
 
 # Get SSL certificate
 info "Requesting SSL certificate from Let's Encrypt..."
@@ -174,14 +190,6 @@ sleep 15
 info "Container status:"
 docker-compose -f docker/docker-compose.https.yml ps
 echo ""
-
-# Configure firewall
-if command -v ufw &> /dev/null; then
-    info "Configuring firewall (UFW)..."
-    sudo ufw allow 80/tcp > /dev/null 2>&1 || true
-    sudo ufw allow 443/tcp > /dev/null 2>&1 || true
-    success "Firewall configured (ports 80, 443 allowed)"
-fi
 
 echo ""
 info "========================================="
