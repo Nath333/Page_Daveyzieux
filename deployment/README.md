@@ -1,413 +1,353 @@
-# Deployment Configuration
+# Deployment Scripts & Tools
 
-This folder contains all Docker and Nginx configurations for deploying Page Daveyzieux.
+Automated deployment scripts and configuration tools for Page Daveyzieux.
+
+---
 
 ## 📁 Folder Structure
 
 ```
 deployment/
-├── nginx/
-│   ├── Dockerfile.nginx         # HTTP-only nginx image
-│   ├── Dockerfile.nginx-ssl     # HTTPS nginx image (with SSL support)
-│   ├── nginx.conf               # HTTP nginx configuration
-│   └── nginx-ssl.conf           # HTTPS nginx configuration (template)
-├── certbot/                     # Created at runtime
-│   ├── conf/                    # SSL certificates (Let's Encrypt)
-│   └── www/                     # Certbot challenges
-├── HTTPS_DUCKDNS_SETUP.md      # Detailed HTTPS setup guide
+├── deploy-https.sh              # HTTPS production deployment ⭐
+├── deploy-ubuntu.sh             # HTTP development deployment
+├── configure-domain.sh          # Configure DuckDNS domain
+├── verify-configs.sh            # Verify all configurations
+├── HTTPS_DUCKDNS_SETUP.md      # Detailed HTTPS guide
 └── README.md                    # This file
 ```
 
-## 🚀 Deployment Options
+---
 
-### Option 1: HTTP Deployment (Development/Testing)
+## 🚀 Deployment Scripts
 
-**Files used:**
-- `docker-compose.yml` (root)
-- `deployment/nginx/Dockerfile.nginx`
-- `deployment/nginx/nginx.conf`
-- `Dockerfile` (Node.js app)
+### deploy-https.sh ⭐ (Production)
 
-**Deploy:**
+**Purpose**: Automated HTTPS deployment with DuckDNS and Let's Encrypt
+
+**What it does**:
+1. ✅ Asks for DuckDNS domain and token
+2. ✅ Updates DuckDNS with server IP
+3. ✅ Installs Docker (if needed)
+4. ✅ Configures nginx with your domain
+5. ✅ Obtains SSL certificate
+6. ✅ Builds and starts all containers
+7. ✅ Configures firewall
+8. ✅ Sets up auto-renewal
+9. ✅ Tests deployment
+
+**Usage**:
 ```bash
-docker compose up -d --build
+./deployment/deploy-https.sh
 ```
 
-**Access:**
-- http://localhost:3001
+**Requirements**:
+- Ubuntu 20.04+ or Debian 11+
+- DuckDNS account and domain
+- Ports 80 and 443 open
+
+**Result**: HTTPS site at https://your-domain.duckdns.org
 
 ---
 
-### Option 2: HTTPS Deployment (Production) ⭐
+### deploy-ubuntu.sh (Development)
 
-**Files used:**
-- `docker-compose-https.yml` (root)
-- `deployment/nginx/Dockerfile.nginx-ssl`
-- `deployment/nginx/nginx-ssl.conf` (needs domain configuration)
-- `Dockerfile` (Node.js app)
-- Certbot (automatic)
+**Purpose**: Quick HTTP deployment for development/testing
 
-**Deploy:**
+**What it does**:
+1. ✅ Installs Docker (if needed)
+2. ✅ Stops existing containers
+3. ✅ Builds Docker images
+4. ✅ Starts HTTP deployment
+5. ✅ Tests endpoints
+
+**Usage**:
 ```bash
-./deploy-https.sh
+./deployment/deploy-ubuntu.sh
 ```
 
-**Access:**
-- https://your-domain.duckdns.org
+**Requirements**:
+- Ubuntu 20.04+ or Debian 11+
+
+**Result**: HTTP site at http://localhost:3001
 
 ---
 
-## 🔧 Configuration Files Explained
+## 🔧 Configuration Tools
 
-### Nginx Dockerfiles
+### configure-domain.sh
 
-#### `Dockerfile.nginx` (HTTP only)
-- Based on `nginx:1.25-alpine`
-- Installs `wget` for health checks
-- Copies `nginx.conf`
-- Exposes port 80
-- **Use for:** Development, testing, internal networks
+**Purpose**: Configure your DuckDNS domain in nginx config
 
-#### `Dockerfile.nginx-ssl` (HTTPS)
-- Based on `nginx:1.25-alpine`
-- Installs `wget` and `openssl`
-- Copies `nginx-ssl.conf`
-- Exposes ports 80 and 443
-- Mounts SSL certificates from certbot
-- **Use for:** Production with DuckDNS and Let's Encrypt
+**What it does**:
+- Updates `docker/nginx/https/nginx.conf` with your domain
+- Creates backup of original config
+- Shows what was changed
 
-### Nginx Configurations
-
-#### `nginx.conf` (HTTP)
-- Port 80 only
-- Reverse proxy to Node.js app (port 3001)
-- Rate limiting (10 req/s API, 30 req/s general)
-- Gzip compression
-- Security headers
-- Static file caching
-- Cloudflare IP support
-- **No SSL/TLS**
-
-#### `nginx-ssl.conf` (HTTPS)
-- Ports 80 (redirect) and 443 (HTTPS)
-- SSL/TLS with Let's Encrypt certificates
-- HTTP → HTTPS redirect
-- Modern TLS 1.2/1.3 configuration
-- Security headers (HSTS, etc.)
-- Certbot challenge support
-- **Template:** Replace `YOUR_DOMAIN.duckdns.org` with your actual domain
-
----
-
-## ⚙️ How It Works
-
-### HTTP Deployment Flow
-
-```
-Client (Port 3001)
-    ↓
-Docker Host
-    ↓
-Nginx Container (Port 80 → 3001)
-    ↓
-Node.js Container (Port 3001)
+**Usage**:
+```bash
+./deployment/configure-domain.sh
 ```
 
-### HTTPS Deployment Flow
+**Prompts for**:
+- Your DuckDNS domain (without .duckdns.org)
 
-```
-Client (Port 443)
-    ↓
-Docker Host
-    ↓
-Nginx Container (Port 443 → 3001)
-    ├── SSL/TLS Termination
-    ├── HTTP→HTTPS Redirect (Port 80)
-    └── Certbot Challenges
-    ↓
-Node.js Container (Port 3001)
-
-Certbot Container
-    ├── Auto-renew certificates
-    └── Update every 12 hours
+**Example**:
+```bash
+$ ./deployment/configure-domain.sh
+Enter your DuckDNS domain: page-daveyzieux
+✓ Updated nginx config with page-daveyzieux.duckdns.org
 ```
 
 ---
 
-## 🔒 SSL Certificate Management
+### verify-configs.sh
 
-### Automatic (Recommended)
+**Purpose**: Test all Docker and nginx configurations
 
-Use `deploy-https.sh` script:
+**What it does**:
+1. ✅ Checks Docker installation
+2. ✅ Tests HTTP nginx config syntax
+3. ✅ Tests HTTPS nginx config syntax
+4. ✅ Validates docker-compose.http.yml
+5. ✅ Validates docker-compose.https.yml
+6. ✅ Checks all required files exist
+
+**Usage**:
 ```bash
-./deploy-https.sh
+./deployment/verify-configs.sh
 ```
 
-This will:
-1. Ask for your DuckDNS domain
-2. Obtain SSL certificate from Let's Encrypt
-3. Configure nginx with your domain
-4. Set up auto-renewal
-
-### Manual
-
-1. **Create directories:**
-```bash
-mkdir -p deployment/certbot/conf
-mkdir -p deployment/certbot/www
+**Output**:
+```
+✓ Docker is installed
+✓ HTTP nginx config is valid
+✓ HTTPS nginx config is valid
+✓ docker-compose.http.yml is valid
+✓ docker-compose.https.yml is valid
+✓ All configurations valid!
 ```
 
-2. **Update nginx-ssl.conf:**
+---
+
+## 📖 Quick Start
+
+### First Time Deployment
+
+**For production (HTTPS)**:
 ```bash
-# Replace YOUR_DOMAIN.duckdns.org with your actual domain
-sed -i 's/YOUR_DOMAIN.duckdns.org/your-domain.duckdns.org/g' deployment/nginx/nginx-ssl.conf
+# 1. Clone repository
+git clone https://github.com/Nath333/Page_Daveyzieux.git
+cd Page_Daveyzieux
+
+# 2. Run HTTPS deployment
+./deployment/deploy-https.sh
+
+# The script will guide you through:
+# - DuckDNS domain setup
+# - SSL certificate
+# - Docker deployment
 ```
 
-3. **Get certificate:**
+**For development (HTTP)**:
 ```bash
+# 1. Clone repository
+git clone https://github.com/Nath333/Page_Daveyzieux.git
+cd Page_Daveyzieux
+
+# 2. Run HTTP deployment
+./deployment/deploy-ubuntu.sh
+```
+
+---
+
+## 🔄 Update Existing Deployment
+
+```bash
+# Pull latest code
+git pull
+
+# Rebuild and restart
+cd docker
+docker compose -f docker-compose.https.yml up -d --build
+
+# Or use the script
+./deployment/deploy-https.sh
+```
+
+---
+
+## 🧪 Testing Before Deployment
+
+```bash
+# Verify all configs are valid
+./deployment/verify-configs.sh
+
+# Test nginx config only
 docker run --rm \
-  -v $(pwd)/deployment/certbot/conf:/etc/letsencrypt \
-  -v $(pwd)/deployment/certbot/www:/var/www/certbot \
-  -p 80:80 \
-  certbot/certbot certonly \
-  --standalone \
-  --email your-email@example.com \
-  --agree-tos \
-  -d your-domain.duckdns.org
-```
-
-4. **Deploy:**
-```bash
-docker compose -f docker-compose-https.yml up -d --build
+  -v $(pwd)/docker/nginx/https/nginx.conf:/etc/nginx/nginx.conf:ro \
+  nginx:1.25-alpine nginx -t
 ```
 
 ---
 
-## 📝 Before First HTTPS Deployment
+## 📝 Environment Variables
 
-### 1. Configure DuckDNS Domain
+The deployment scripts use environment variables from `.env` file or command line.
 
-Edit `deployment/nginx/nginx-ssl.conf`:
+**Create `.env` in project root**:
+```env
+# IZITGreen Portal
+IZIT_API_BASE=http://10.20.1.100:8083
+IZIT_USERNAME=Vincent
+IZIT_PASSWORD=Admin.1024
 
-```nginx
-# Line 89: Change this
-server_name YOUR_DOMAIN.duckdns.org;  # <-- Replace with your domain
-
-# Lines 92-93: Update certificate paths
-ssl_certificate /etc/letsencrypt/live/YOUR_DOMAIN.duckdns.org/fullchain.pem;
-ssl_certificate_key /etc/letsencrypt/live/YOUR_DOMAIN.duckdns.org/privkey.pem;
-
-# Line 105: Update trusted certificate
-ssl_trusted_certificate /etc/letsencrypt/live/YOUR_DOMAIN.duckdns.org/chain.pem;
-```
-
-**Or use the automated script:**
-```bash
-DOMAIN="your-domain.duckdns.org"
-sed -i "s/YOUR_DOMAIN.duckdns.org/$DOMAIN/g" deployment/nginx/nginx-ssl.conf
-```
-
-### 2. Open Firewall Ports
-
-```bash
-sudo ufw allow 80/tcp   # HTTP (certbot challenges)
-sudo ufw allow 443/tcp  # HTTPS
-```
-
-### 3. Verify DuckDNS
-
-```bash
-# Update DuckDNS IP
-curl "https://www.duckdns.org/update?domains=YOUR_DOMAIN&token=YOUR_TOKEN&ip="
-
-# Check DNS
-nslookup your-domain.duckdns.org
+# Server
+PORT=3001
+NODE_ENV=production
 ```
 
 ---
 
-## 🧪 Testing Configurations
+## 🔐 HTTPS Deployment Details
 
-### Test Nginx Config Syntax
+### What deploy-https.sh Does
 
-**HTTP:**
-```bash
-docker run --rm \
-  -v $(pwd)/deployment/nginx/nginx.conf:/etc/nginx/nginx.conf:ro \
-  nginx:1.25-alpine \
-  nginx -t
-```
+1. **DuckDNS Setup**
+   - Updates your domain to point to server IP
+   - Sets up cron job for auto-update (every 5 min)
 
-**HTTPS:**
-```bash
-docker run --rm \
-  -v $(pwd)/deployment/nginx/nginx-ssl.conf:/etc/nginx/nginx.conf:ro \
-  nginx:1.25-alpine \
-  nginx -t
-```
+2. **SSL Certificate**
+   - Obtains free certificate from Let's Encrypt
+   - Valid for 90 days
+   - Auto-renewal configured (every 12 hours)
 
-### Test Deployment
+3. **Nginx Configuration**
+   - Updates `docker/nginx/https/nginx.conf` with your domain
+   - Configures SSL/TLS settings
+   - Sets up HTTP → HTTPS redirect
 
-**HTTP:**
-```bash
-docker compose up -d --build
-curl http://localhost:3001/health
-```
+4. **Docker Deployment**
+   - Builds optimized images
+   - Starts nginx + Node.js + Certbot
+   - Configures health checks
 
-**HTTPS:**
-```bash
-docker compose -f docker-compose-https.yml up -d --build
-curl https://your-domain.duckdns.org/health
-```
+5. **Security**
+   - Configures firewall (UFW)
+   - Sets up security headers
+   - Enables HSTS
 
----
+### Files Modified
 
-## 🔄 Switching Between HTTP and HTTPS
+- `docker/nginx/https/nginx.conf` - Domain configuration
+- `docker/certbot/conf/` - SSL certificates
+- Crontab - DuckDNS auto-update
 
-### From HTTP to HTTPS
+### Ports Configured
 
-```bash
-# Stop HTTP deployment
-docker compose down
-
-# Deploy with HTTPS
-./deploy-https.sh
-```
-
-### From HTTPS to HTTP
-
-```bash
-# Stop HTTPS deployment
-docker compose -f docker-compose-https.yml down
-
-# Deploy with HTTP
-docker compose up -d --build
-```
+- Port 80 - HTTP (redirect to HTTPS + certbot)
+- Port 443 - HTTPS
 
 ---
 
 ## 🐛 Troubleshooting
 
-### Nginx Won't Start
+### Script Fails to Get SSL Certificate
 
+**Check**:
 ```bash
-# Check nginx config syntax
-docker compose exec nginx nginx -t
+# 1. Verify port 80 is open
+sudo netstat -tlnp | grep :80
 
-# Check logs
-docker compose logs nginx
+# 2. Test DuckDNS
+curl "https://www.duckdns.org/update?domains=YOUR_DOMAIN&token=YOUR_TOKEN&ip="
 
-# Rebuild
-docker compose down
-docker compose up -d --build
+# 3. Check DNS
+nslookup your-domain.duckdns.org
 ```
 
-### SSL Certificate Issues
+### Docker Not Found
 
 ```bash
-# Check certificate files
-ls -la deployment/certbot/conf/live/
+# Install Docker manually
+curl -fsSL https://get.docker.com -o get-docker.sh
+sudo sh get-docker.sh
+sudo usermod -aG docker $USER
 
-# Renew certificate
-docker compose -f docker-compose-https.yml run --rm certbot renew
-
-# Get new certificate
-docker run --rm \
-  -v $(pwd)/deployment/certbot/conf:/etc/letsencrypt \
-  -v $(pwd)/deployment/certbot/www:/var/www/certbot \
-  -p 80:80 \
-  certbot/certbot certonly --standalone \
-  -d your-domain.duckdns.org
+# Log out and back in
 ```
 
-### Port Already in Use
+### Permission Denied
 
 ```bash
-# Check what's using the port
-sudo netstat -tlnp | grep -E ':(80|443|3001)'
-
-# Stop conflicting service
-sudo systemctl stop apache2  # or nginx, etc.
+# Make scripts executable
+chmod +x deployment/*.sh
 ```
 
 ---
 
-## 📚 Related Files
+## 📚 Related Documentation
 
-### Root Directory
-- `Dockerfile` - Node.js application image
-- `docker-compose.yml` - HTTP deployment
-- `docker-compose-https.yml` - HTTPS deployment
-- `deploy-ubuntu.sh` - HTTP deployment script
-- `deploy-https.sh` - HTTPS deployment script
-
-### Documentation
-- `DEPLOYMENT_WORKFLOW.md` - Complete deployment guide
-- `UBUNTU_QUICKSTART.md` - Quick start guide
-- `deployment/HTTPS_DUCKDNS_SETUP.md` - Detailed HTTPS guide
-
----
-
-## ✅ Clean Deployment Checklist
-
-### HTTP Deployment
-- [ ] Node.js app builds successfully (`Dockerfile`)
-- [ ] Nginx builds successfully (`deployment/nginx/Dockerfile.nginx`)
-- [ ] Nginx config valid (`deployment/nginx/nginx.conf`)
-- [ ] Port 3001 available
-- [ ] Docker Compose up successfully
-- [ ] Health check passes: `curl http://localhost:3001/health`
-
-### HTTPS Deployment
-- [ ] DuckDNS domain configured
-- [ ] Domain points to server IP
-- [ ] Ports 80 and 443 available
-- [ ] `nginx-ssl.conf` updated with domain
-- [ ] SSL certificate obtained
-- [ ] Nginx builds successfully (`deployment/nginx/Dockerfile.nginx-ssl`)
-- [ ] Docker Compose HTTPS up successfully
-- [ ] Health check passes: `curl https://your-domain.duckdns.org/health`
-- [ ] SSL certificate valid: `openssl s_client -connect your-domain.duckdns.org:443`
+- [HTTPS Setup Guide](HTTPS_DUCKDNS_SETUP.md) - Detailed HTTPS instructions
+- [Docker Guide](../docker/README.md) - Docker configuration details
+- [Deployment Workflow](../DEPLOYMENT_WORKFLOW.md) - Complete workflow
+- [Quick Start](../QUICKSTART.md) - Fast deployment guide
 
 ---
 
 ## 💡 Best Practices
 
-1. **Always test locally first** with HTTP deployment
-2. **Use environment variables** for sensitive data (`.env` file)
-3. **Keep certificates backed up** (`deployment/certbot/conf/`)
-4. **Monitor logs regularly** (`docker compose logs -f`)
-5. **Update regularly** (`git pull && docker compose up -d --build`)
-6. **Use HTTPS in production** (deploy-https.sh)
-7. **Test nginx config** before deploying (`nginx -t`)
+1. **Always test first**
+   ```bash
+   ./deployment/verify-configs.sh
+   ```
+
+2. **Use HTTPS in production**
+   ```bash
+   ./deployment/deploy-https.sh
+   ```
+
+3. **Keep credentials secure**
+   - Use `.env` file
+   - Never commit credentials
+
+4. **Monitor logs**
+   ```bash
+   cd docker
+   docker compose -f docker-compose.https.yml logs -f
+   ```
+
+5. **Update regularly**
+   ```bash
+   git pull && ./deployment/deploy-https.sh
+   ```
 
 ---
 
 ## 🎯 Quick Commands Reference
 
 ```bash
-# HTTP Deployment
-docker compose up -d --build
-docker compose logs -f
-docker compose down
+# Deploy HTTPS (production)
+./deployment/deploy-https.sh
 
-# HTTPS Deployment
-docker compose -f docker-compose-https.yml up -d --build
-docker compose -f docker-compose-https.yml logs -f
-docker compose -f docker-compose-https.yml down
+# Deploy HTTP (development)
+./deployment/deploy-ubuntu.sh
 
-# Test nginx config
-docker compose exec nginx nginx -t
+# Configure domain
+./deployment/configure-domain.sh
 
-# Renew SSL certificate
-docker compose -f docker-compose-https.yml run --rm certbot renew
+# Verify configs
+./deployment/verify-configs.sh
 
-# View certificate info
-openssl x509 -in deployment/certbot/conf/live/YOUR_DOMAIN/fullchain.pem -noout -text
+# View logs
+cd docker && docker compose -f docker-compose.https.yml logs -f
+
+# Stop deployment
+cd docker && docker compose -f docker-compose.https.yml down
+
+# Update deployment
+git pull && cd docker && docker compose -f docker-compose.https.yml up -d --build
 ```
 
 ---
 
-**For detailed deployment instructions, see:**
-- [DEPLOYMENT_WORKFLOW.md](../DEPLOYMENT_WORKFLOW.md)
-- [HTTPS_DUCKDNS_SETUP.md](HTTPS_DUCKDNS_SETUP.md)
+**Clean, organized, and production-ready deployment scripts!** 🚀
