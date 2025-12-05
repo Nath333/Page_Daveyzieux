@@ -80,10 +80,10 @@ else
 fi
 
 # Check Docker Compose
-if ! docker compose version &> /dev/null; then
+if ! docker-compose version &> /dev/null; then
     error "Docker Compose not found. Installing..."
-    sudo apt-get update
-    sudo apt-get install -y docker-compose-plugin
+    sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+    sudo chmod +x /usr/local/bin/docker-compose
     success "Docker Compose installed"
 else
     success "Docker Compose is installed"
@@ -105,8 +105,8 @@ success "Nginx configured"
 
 # Stop any existing containers
 info "Stopping existing containers..."
-docker compose -f docker/docker-compose.https.yml down 2>/dev/null || true
-docker compose down 2>/dev/null || true
+docker-compose-f docker/docker-compose.https.yml down 2>/dev/null || true
+docker-composedown 2>/dev/null || true
 success "Existing containers stopped"
 
 echo ""
@@ -155,13 +155,13 @@ echo ""
 
 # Build and start containers
 info "Building Docker images..."
-docker compose -f docker/docker-compose.https.yml build
+docker-compose-f docker/docker-compose.https.yml build
 
 success "Docker images built"
 echo ""
 
 info "Starting containers with HTTPS..."
-docker compose -f docker/docker-compose.https.yml up -d
+docker-compose-f docker/docker-compose.https.yml up -d
 
 success "Containers started"
 echo ""
@@ -172,7 +172,7 @@ sleep 15
 
 # Check container status
 info "Container status:"
-docker compose -f docker/docker-compose.https.yml ps
+docker-compose-f docker/docker-compose.https.yml ps
 echo ""
 
 # Configure firewall
@@ -226,10 +226,10 @@ info "Access your site:"
 echo "  https://$FULL_DOMAIN"
 echo ""
 info "Useful commands:"
-echo "  View logs:          docker compose -f docker/docker-compose.https.yml logs -f"
-echo "  Stop application:   docker compose -f docker/docker-compose.https.yml down"
-echo "  Restart:            docker compose -f docker/docker-compose.https.yml restart"
-echo "  Update:             git pull && docker compose -f docker/docker-compose.https.yml up -d --build"
+echo "  View logs:          docker-compose-f docker/docker-compose.https.yml logs -f"
+echo "  Stop application:   docker-compose-f docker/docker-compose.https.yml down"
+echo "  Restart:            docker-compose-f docker/docker-compose.https.yml restart"
+echo "  Update:             git pull && docker-compose-f docker/docker-compose.https.yml up -d --build"
 echo ""
 info "SSL Certificate:"
 echo "  ✓ Automatically renews every 12 hours"
