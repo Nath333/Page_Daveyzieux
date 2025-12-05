@@ -5,7 +5,7 @@ FROM nginx:1.25-alpine
 RUN apk add --no-cache wget
 
 # Copy nginx configuration
-COPY deployment/nginx/nginx.conf /etc/nginx/nginx.conf
+COPY docker/nginx/http/nginx.conf /etc/nginx/nginx.conf
 
 # Expose port 80
 EXPOSE 80

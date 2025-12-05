@@ -76,7 +76,8 @@
       "Bash(chmod:*)",
       "Bash(docker compose:*)",
       "Bash(git restore:*)",
-      "Bash(docker:*)"
+      "Bash(docker:*)",
+      "Bash(cmd /c dir /b \"c:\\Users\\natha\\Desktop\\App_Izit\\Page_Daveyzieux\\docs\\*.md\")"
     ],
     "deny": [],
     "ask": []

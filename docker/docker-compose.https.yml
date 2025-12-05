@@ -6,8 +6,8 @@ services:
     image: certbot/certbot:latest
     container_name: page-daveyzieux-certbot
     volumes:
-      - ./docker/certbot/conf:/etc/letsencrypt
-      - ./docker/certbot/www:/var/www/certbot
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
     # Auto-renew certificates every 12 hours
     entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew --quiet; sleep 12h & wait $${!}; done;'"
     networks:
@@ -17,16 +17,16 @@ services:
   # Nginx reverse proxy with HTTPS
   nginx:
     build:
-      context: .
+      context: ..
       dockerfile: docker/nginx/https/Dockerfile
     container_name: page-daveyzieux-nginx-https
     ports:
       - "80:80"    # HTTP (redirect to HTTPS + certbot challenges)
       - "443:443"  # HTTPS
     volumes:
-      - ./docker/nginx/https/nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./docker/certbot/conf:/etc/letsencrypt:ro
-      - ./docker/certbot/www:/var/www/certbot:ro
+      - ./nginx/https/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./certbot/conf:/etc/letsencrypt:ro
+      - ./certbot/www:/var/www/certbot:ro
     depends_on:
       app:
         condition: service_healthy
@@ -48,7 +48,7 @@ services:
   # Node.js application
   app:
     build:
-      context: .
+      context: ..
       dockerfile: docker/app/Dockerfile
     container_name: page-daveyzieux-app
     expose:

@@ -93,14 +93,14 @@ echo ""
 
 # Create necessary directories
 info "Creating directories..."
-mkdir -p deployment/certbot/conf
-mkdir -p deployment/certbot/www
-mkdir -p deployment/nginx
+mkdir -p docker/certbot/conf
+mkdir -p docker/certbot/www
+mkdir -p docker/nginx
 success "Directories created"
 
 # Update nginx configuration with domain
 info "Configuring nginx with your domain..."
-sed -i "s/YOUR_DOMAIN.duckdns.org/$FULL_DOMAIN/g" deployment/nginx/nginx-ssl.conf
+sed -i "s/YOUR_DOMAIN.duckdns.org/$FULL_DOMAIN/g" docker/nginx/https/nginx.conf
 success "Nginx configured"
 
 # Stop any existing containers
@@ -124,8 +124,8 @@ info "Requesting SSL certificate from Let's Encrypt..."
 info "This may take a minute..."
 
 docker run --rm \
-  -v $(pwd)/deployment/certbot/conf:/etc/letsencrypt \
-  -v $(pwd)/deployment/certbot/www:/var/www/certbot \
+  -v $(pwd)/docker/certbot/conf:/etc/letsencrypt \
+  -v $(pwd)/docker/certbot/www:/var/www/certbot \
   -p 80:80 \
   certbot/certbot certonly \
   --standalone \
@@ -234,7 +234,7 @@ echo ""
 info "SSL Certificate:"
 echo "  ✓ Automatically renews every 12 hours"
 echo "  ✓ Valid for 90 days"
-echo "  ✓ Location: deployment/certbot/conf/live/$FULL_DOMAIN/"
+echo "  ✓ Location: docker/certbot/conf/live/$FULL_DOMAIN/"
 echo ""
 info "DuckDNS:"
 echo "  ✓ Updates every 5 minutes via cron"

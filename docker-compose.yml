@@ -1,16 +1,16 @@
 version: '3.8'
 
 services:
-  # Nginx reverse proxy layer
+  # Nginx reverse proxy (HTTP)
   nginx:
     build:
       context: .
-      dockerfile: deployment/nginx/Dockerfile.nginx
-    container_name: smart-building-nginx
+      dockerfile: docker/nginx/http/Dockerfile
+    container_name: page-daveyzieux-nginx
     ports:
       - "3001:80"
     depends_on:
-      weather-dashboard:
+      app:
         condition: service_healthy
     restart: unless-stopped
     healthcheck:
@@ -27,21 +27,21 @@ services:
     networks:
       - app-network
 
-  # Node.js backend application
-  weather-dashboard:
+  # Node.js application
+  app:
     build:
       context: .
-      dockerfile: Dockerfile
-    container_name: smart-building-weather
+      dockerfile: docker/app/Dockerfile
+    container_name: page-daveyzieux-app
     expose:
       - "3001"
     environment:
       - NODE_ENV=production
       - PORT=3001
       - HOST=0.0.0.0
-      - IZIT_API_BASE=http://10.20.1.100:8083
-      - IZIT_USERNAME=Vincent
-      - IZIT_PASSWORD=Admin.1024
+      - IZIT_API_BASE=${IZIT_API_BASE:-http://10.20.1.100:8083}
+      - IZIT_USERNAME=${IZIT_USERNAME:-Vincent}
+      - IZIT_PASSWORD=${IZIT_PASSWORD:-Admin.1024}
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "node", "-e", "require('http').get('http://localhost:3001/api/weather', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"]

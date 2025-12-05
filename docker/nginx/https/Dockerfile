@@ -4,8 +4,8 @@ FROM nginx:1.25-alpine
 # Install wget and openssl for health checks and SSL
 RUN apk add --no-cache wget openssl
 
-# Copy nginx SSL configuration
-COPY deployment/nginx/nginx-ssl.conf /etc/nginx/nginx.conf
+# Copy nginx HTTPS configuration
+COPY docker/nginx/https/nginx.conf /etc/nginx/nginx.conf
 
 # Create directory for certbot challenges
 RUN mkdir -p /var/www/certbot
