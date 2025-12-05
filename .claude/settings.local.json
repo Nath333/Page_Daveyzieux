@@ -67,7 +67,16 @@
       "Bash(del \"C:\\Users\\natha\\Desktop\\App_Izit\\Analyse_Facture_Elec_232425_Tridome38\\nul\")",
       "Bash(python copy_files.py:*)",
       "Bash(del copy_files.py)",
-      "Bash(python:*)"
+      "Bash(python:*)",
+      "Bash(node --version:*)",
+      "Bash(npm --version)",
+      "Bash(git mv:*)",
+      "Bash(cmd //c taskkill //F //PID 102940)",
+      "Bash(docker-compose down:*)",
+      "Bash(chmod:*)",
+      "Bash(docker compose:*)",
+      "Bash(git restore:*)",
+      "Bash(docker:*)"
     ],
     "deny": [],
     "ask": []
