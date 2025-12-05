@@ -41,7 +41,7 @@ services:
       - NODE_ENV=production
       - PORT=3001
       - HOST=0.0.0.0
-      - IZIT_API_BASE=${IZIT_API_BASE:-https://portail.izit.green}
+      - IZIT_API_BASE=${IZIT_API_BASE:-http://portail.izit.green:8083}
       - IZIT_USERNAME=${IZIT_USERNAME:-Vincent}
       - IZIT_PASSWORD=${IZIT_PASSWORD:-Admin.1024}
     restart: unless-stopped
