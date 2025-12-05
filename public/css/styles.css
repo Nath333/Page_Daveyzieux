@@ -104,13 +104,13 @@
         }
 
         .brand-logo {
-            height: 40px;
+            height: 32px;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 4px 8px;
+            padding: 3px 7px;
             background: white;
-            border-radius: 6px;
+            border-radius: 5px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12);
             transition: transform 0.3s ease;
             flex-shrink: 0;
@@ -249,31 +249,33 @@
         /* Partner Logos in Navigation */
         .partner-logos-nav {
             display: flex;
-            gap: 10px;
+            gap: 14px;
             align-items: center;
-            padding-left: 12px;
-            border-left: 1.5px solid rgba(16, 185, 129, 0.25);
+            padding-left: 14px;
+            border-left: 2px solid rgba(16, 185, 129, 0.3);
             white-space: nowrap;
             flex: 0 0 auto;
         }
 
         .partner-logo-nav {
-            height: 40px;
+            height: 48px;
             width: auto;
+            max-width: 110px;
             object-fit: contain;
             transition: all 0.3s ease;
-            background: linear-gradient(135deg, #ffffff, #f8f9fa);
-            padding: 4px 8px;
-            border-radius: 6px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12);
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: #ffffff;
+            padding: 7px 12px;
+            border-radius: 8px;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+            border: 1.5px solid rgba(16, 185, 129, 0.2);
             flex-shrink: 0;
         }
 
         .partner-logo-nav:hover {
-            transform: translateY(-4px) scale(1.08);
-            box-shadow: 0 10px 20px rgba(16, 185, 129, 0.2), 0 4px 8px rgba(0, 0, 0, 0.15);
-            border-color: rgba(16, 185, 129, 0.3);
+            transform: translateY(-3px) scale(1.06);
+            box-shadow: 0 8px 16px rgba(16, 185, 129, 0.25), 0 3px 8px rgba(0, 0, 0, 0.2);
+            border-color: rgba(16, 185, 129, 0.5);
+            background: #f8fffe;
         }
 
         /* Grid Layout */
