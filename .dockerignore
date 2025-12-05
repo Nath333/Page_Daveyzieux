@@ -1,0 +1,60 @@
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Documentation
+*.md
+!README.md
+
+# Node
+node_modules
+npm-debug.log
+yarn-error.log
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Deployment files
+docker-compose*.yml
+.env
+.env.*
+
+# Docker data
+docker/certbot/
+docker/nginx/http/
+docker/nginx/https/
+
+# Windows
+*.bat
+start-tunnel.bat
+setup-cloudflare-tunnel.bat
+install-tunnel-service.bat
+cloudflared.exe
+
+# Backup files
+*.backup
+*.bak
+
+# Logs
+logs/
+*.log
+
+# Build artifacts
+dist/
+build/
+
+# Temporary files
+tmp/
+temp/
+
+# Deployment scripts
+deployment/
