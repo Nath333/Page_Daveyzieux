@@ -1,0 +1,1850 @@
+/**
+ * Gestion Énergétique - Daveyzieux Dashboard
+ * Stylesheet for energy management dashboard
+ *
+ * Structure:
+ * - Global Reset & Variables
+ * - Layout (Container, Grid, Navigation)
+ * - Components (Cards, Badges, Buttons)
+ * - Sections (Weather, Air Quality, Energy, Forecasts)
+ * - Responsive Design (Mobile, Tablet, Desktop, TV, Ultrawide)
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+/* ========================================
+   GLOBAL RESET & VARIABLES
+   ======================================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+            --primary: #10b981;
+            --primary-dark: #059669;
+            --secondary: #3b82f6;
+            --bg-dark: #1a1f2e;
+            --bg-card: #252d3d;
+            --bg-card-hover: #2d3548;
+            --text-primary: #f8fafc;
+            --text-secondary: #a8b3cf;
+            --border: #3d4758;
+            --success: #22c55e;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #1a1f2e;
+            color: var(--text-primary);
+            height: 100vh;
+            width: 100vw;
+            line-height: 1.5;
+            position: relative;
+            overflow: auto;
+            display: flex;
+            flex-direction: column;
+            font-size: 14px;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(circle at 20% 50%, rgba(16, 185, 129, 0.02) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(59, 130, 246, 0.02) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            max-width: 100%;
+            width: 100%;
+            height: 100vh;
+            margin: 0 auto;
+            padding: 10px 16px;
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        /* Top Navigation */
+        .top-nav {
+            background: var(--bg-card);
+            border-radius: 8px;
+            padding: 6px 14px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            border: 1px solid var(--border);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+            min-height: 56px;
+            flex-shrink: 0;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            min-width: 0;
+            flex: 0 1 auto;
+        }
+
+        .brand-logo {
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 4px 8px;
+            background: white;
+            border-radius: 6px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12);
+            transition: transform 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .brand-logo:hover {
+            transform: scale(1.02);
+        }
+
+        .brand-logo img {
+            height: 100%;
+            width: auto;
+            object-fit: contain;
+        }
+
+        .brand-text {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            justify-content: center;
+            min-width: 0;
+        }
+
+        .brand-title {
+            font-size: 14px;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.4px;
+            line-height: 1.2;
+            white-space: nowrap;
+        }
+
+        .brand-subtitle {
+            font-size: 11px;
+            color: var(--text-secondary);
+            font-weight: 600;
+            opacity: 0.9;
+            line-height: 1.2;
+            white-space: nowrap;
+        }
+
+        .status-badges {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: nowrap;
+            justify-content: flex-end;
+            white-space: nowrap;
+            flex: 0 0 auto;
+        }
+
+        .badge {
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(59, 130, 246, 0.1));
+            backdrop-filter: blur(8px);
+            border: 1.5px solid rgba(16, 185, 129, 0.35);
+            color: var(--primary);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow:
+                inset 0 1px 2px rgba(255, 255, 255, 0.2),
+                0 2px 8px rgba(16, 185, 129, 0.12),
+                0 4px 16px rgba(16, 185, 129, 0.08);
+            white-space: nowrap;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .badge::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            animation: badgeShimmer 3s infinite;
+            pointer-events: none;
+        }
+
+        .badge:hover {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.22), rgba(59, 130, 246, 0.16));
+            backdrop-filter: blur(8px);
+            border-color: rgba(16, 185, 129, 0.5);
+            transform: scale(1.03);
+            box-shadow:
+                inset 0 1px 2px rgba(255, 255, 255, 0.25),
+                0 2px 8px rgba(16, 185, 129, 0.15),
+                0 4px 16px rgba(16, 185, 129, 0.12),
+                0 0 20px rgba(16, 185, 129, 0.15);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--primary);
+            box-shadow: 0 0 8px var(--primary), 0 0 3px rgba(16, 185, 129, 0.5);
+            animation: pulse 2s ease-in-out infinite;
+            position: relative;
+        }
+
+        .status-dot::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: var(--primary);
+            animation: ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        @keyframes ping {
+            75%, 100% {
+                transform: translate(-50%, -50%) scale(2);
+                opacity: 0;
+            }
+        }
+
+        /* Partner Logos in Navigation */
+        .partner-logos-nav {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            padding-left: 12px;
+            border-left: 1.5px solid rgba(16, 185, 129, 0.25);
+            white-space: nowrap;
+            flex: 0 0 auto;
+        }
+
+        .partner-logo-nav {
+            height: 40px;
+            width: auto;
+            object-fit: contain;
+            transition: all 0.3s ease;
+            background: linear-gradient(135deg, #ffffff, #f8f9fa);
+            padding: 4px 8px;
+            border-radius: 6px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            flex-shrink: 0;
+        }
+
+        .partner-logo-nav:hover {
+            transform: translateY(-4px) scale(1.08);
+            box-shadow: 0 10px 20px rgba(16, 185, 129, 0.2), 0 4px 8px rgba(0, 0, 0, 0.15);
+            border-color: rgba(16, 185, 129, 0.3);
+        }
+
+        /* Grid Layout */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 10px;
+            margin-bottom: 0;
+            width: 100%;
+            margin-left: auto;
+            margin-right: auto;
+            align-items: stretch;
+            flex: 1;
+            overflow: visible;
+        }
+
+        /* Grid items should use full width */
+        .grid > * {
+            width: 100%;
+            max-width: 100%;
+        }
+
+        /* Rotating Display Sections */
+        .rotating-section {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+            animation: fadeIn 0.5s ease-in-out forwards;
+            width: 100%;
+            height: 100%;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .rotating-section.active {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 10px;
+            opacity: 1;
+            width: 100%;
+            height: auto;
+            min-height: 0;
+            margin: 0 auto;
+            position: relative;
+            align-items: start;
+            align-content: start;
+            padding: 0;
+            overflow: visible;
+        }
+
+        /* Rotating section items should use full width */
+        .rotating-section.active > * {
+            width: 100%;
+            max-width: 100%;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Dashboard container */
+        #dashboard {
+            width: 100%;
+            height: auto;
+            margin: 0 auto;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            flex: 1 1 auto;
+            overflow: visible;
+        }
+
+        /* Rotation indicator */
+        .rotation-indicator {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 14px;
+            font-weight: 500;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+        }
+
+        .rotation-dots {
+            display: flex;
+            gap: 6px;
+        }
+
+        .rotation-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--text-secondary);
+            opacity: 0.3;
+            transition: all 0.3s ease;
+        }
+
+        .rotation-dot.active {
+            background: var(--primary);
+            opacity: 1;
+            transform: scale(1.2);
+        }
+
+        /* Cards */
+        .card {
+            background: var(--bg-card);
+            border-radius: 10px;
+            padding: 12px 14px;
+            border: 1px solid var(--border);
+            box-shadow:
+                0 8px 16px rgba(0, 0, 0, 0.4),
+                0 4px 8px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.05);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: visible;
+            width: 100%;
+            height: auto;
+            min-height: 0;
+            max-height: none;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .card:hover {
+            border-color: var(--primary);
+            box-shadow:
+                0 16px 32px rgba(0, 0, 0, 0.5),
+                0 8px 16px rgba(16, 185, 129, 0.2),
+                inset 0 1px 0 rgba(16, 185, 129, 0.1);
+            transform: translateY(-4px);
+        }
+
+        .card:hover::before {
+            opacity: 1;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--border);
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .card-header::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 60px;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary), transparent);
+        }
+
+        .card-title {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .forecast-container .card-title {
+            font-size: 0.9em;
+            letter-spacing: 0.5px;
+            flex-wrap: wrap;
+        }
+
+        .card-icon {
+            font-size: 1.3em;
+            filter: drop-shadow(0 2px 4px rgba(16, 185, 129, 0.3));
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover .card-icon {
+            transform: scale(1.1);
+        }
+
+        /* Weather Display */
+        .weather-main {
+            grid-column: span 6;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            align-self: stretch;
+        }
+
+        .weather-current {
+            margin-bottom: 0;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .temp-display {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 16px;
+        }
+
+        .temp-icon {
+            font-size: 3em;
+            filter: drop-shadow(0 0 20px rgba(16, 185, 129, 0.3));
+        }
+
+        .temp-info {
+            flex: 1;
+        }
+
+        .temp-value {
+            font-size: 2.8em;
+            font-weight: 900;
+            line-height: 1;
+            background: linear-gradient(135deg, #fff, var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .temp-desc {
+            font-size: 1em;
+            color: var(--text-secondary);
+            margin-top: 6px;
+        }
+
+        .weather-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            flex: 1;
+        }
+
+        .stat-item {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.08), rgba(16, 185, 129, 0.02));
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid rgba(16, 185, 129, 0.15);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .stat-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.15);
+            border-color: rgba(16, 185, 129, 0.3);
+        }
+
+        .stat-item:hover::before {
+            opacity: 1;
+        }
+
+        .stat-label {
+            font-size: 0.65em;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+            font-weight: 600;
+            position: relative;
+        }
+
+        .stat-value {
+            font-size: 1.4em;
+            font-weight: 800;
+            color: var(--text-primary);
+            position: relative;
+            display: flex;
+            align-items: baseline;
+            gap: 2px;
+        }
+
+        .stat-unit {
+            font-size: 0.55em;
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+
+        /* Air Quality Panel */
+        .air-quality-panel {
+            grid-column: span 3;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            align-self: stretch;
+        }
+
+        .aqi-display {
+            text-align: center;
+            padding: 14px;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.12), rgba(16, 185, 129, 0.04));
+            border-radius: 10px;
+            border: 2px solid rgba(16, 185, 129, 0.2);
+            margin-bottom: 12px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.1);
+        }
+
+        .aqi-display::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(16, 185, 129, 0.08), transparent 60%);
+            pointer-events: none;
+        }
+
+        .aqi-label {
+            font-size: 0.75em;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            margin-bottom: 10px;
+            font-weight: 700;
+            position: relative;
+        }
+
+        .aqi-value {
+            font-size: 2.4em;
+            font-weight: 900;
+            color: var(--primary);
+            line-height: 1;
+            position: relative;
+            text-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+        }
+
+        .aqi-status {
+            margin-top: 12px;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 700;
+            display: inline-block;
+            position: relative;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+        }
+
+        .aqi-components {
+            display: grid;
+            gap: 8px;
+            flex: 1;
+        }
+
+        .aqi-component {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 12px;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.06), rgba(16, 185, 129, 0.01));
+            border-radius: 7px;
+            border: 1px solid rgba(16, 185, 129, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .aqi-component::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, rgba(16, 185, 129, 0.08), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .aqi-component:hover {
+            transform: translateX(4px);
+            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.12);
+            border-color: rgba(16, 185, 129, 0.25);
+        }
+
+        .aqi-component:hover::before {
+            opacity: 1;
+        }
+
+        .aqi-component-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text-secondary);
+            font-size: 0.85em;
+            font-weight: 600;
+            position: relative;
+        }
+
+        .aqi-component-label span:first-child {
+            font-size: 1.3em;
+            filter: drop-shadow(0 2px 4px rgba(16, 185, 129, 0.2));
+        }
+
+        .aqi-component-value {
+            font-weight: 700;
+            color: var(--text-primary);
+            font-size: 0.95em;
+            position: relative;
+        }
+
+        /* Energy Panel */
+        .energy-panel {
+            grid-column: span 3;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            align-self: stretch;
+        }
+
+        .energy-consumption {
+            margin-bottom: 24px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .energy-total {
+            text-align: center;
+            padding: 24px;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(16, 185, 129, 0.05));
+            border-radius: 12px;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            margin-bottom: 20px;
+        }
+
+        .energy-label {
+            font-size: 0.85em;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .energy-value {
+            font-size: 3em;
+            font-weight: 900;
+            color: var(--primary);
+            line-height: 1;
+        }
+
+        .energy-breakdown {
+            display: grid;
+            gap: 8px;
+            flex: 1;
+        }
+
+        .energy-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 12px;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.06), rgba(16, 185, 129, 0.01));
+            border-radius: 7px;
+            border: 1px solid rgba(16, 185, 129, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .energy-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, rgba(16, 185, 129, 0.08), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .energy-item:hover {
+            transform: translateX(4px);
+            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.12);
+            border-color: rgba(16, 185, 129, 0.25);
+        }
+
+        .energy-item:hover::before {
+            opacity: 1;
+        }
+
+        .energy-item-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text-secondary);
+            font-size: 0.9em;
+            font-weight: 600;
+            position: relative;
+        }
+
+        .energy-item-label span:first-child {
+            font-size: 1.3em;
+            filter: drop-shadow(0 2px 4px rgba(16, 185, 129, 0.2));
+        }
+
+        .energy-item-value {
+            font-weight: 700;
+            color: var(--text-primary);
+            font-size: 0.95em;
+            position: relative;
+        }
+
+        /* Eco Metrics */
+        .eco-metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+        }
+
+        .metric-card {
+            padding: 20px;
+            background: rgba(16, 185, 129, 0.05);
+            border-radius: 12px;
+            border: 1px solid rgba(16, 185, 129, 0.15);
+            transition: all 0.3s ease;
+        }
+
+        .metric-card:hover {
+            background: rgba(16, 185, 129, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .metric-label {
+            font-size: 0.75em;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .metric-value {
+            font-size: 2em;
+            font-weight: 800;
+            color: var(--primary);
+            display: flex;
+            align-items: baseline;
+            gap: 4px;
+        }
+
+        .metric-unit {
+            font-size: 0.5em;
+            color: var(--text-secondary);
+        }
+
+        .metric-trend {
+            font-size: 0.8em;
+            color: var(--success);
+            margin-top: 6px;
+        }
+
+        /* Forecast Sections */
+        .forecast-container {
+            grid-column: span 12;
+        }
+
+        .forecast-section {
+            margin-bottom: 6px;
+        }
+
+        .forecast-section:last-child {
+            margin-bottom: 0;
+        }
+
+        /* 24h Forecast */
+        .hourly-scroll {
+            display: flex;
+            gap: 5px;
+            overflow-x: auto;
+            padding: 5px 0;
+            scrollbar-width: thin;
+            scrollbar-color: var(--primary) var(--bg-card);
+        }
+
+        .hourly-scroll::-webkit-scrollbar {
+            height: 6px;
+        }
+
+        .hourly-scroll::-webkit-scrollbar-track {
+            background: var(--bg-card);
+            border-radius: 3px;
+        }
+
+        .hourly-scroll::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 3px;
+        }
+
+        .hourly-card {
+            min-width: 100px;
+            padding: 6px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%);
+            border-radius: 7px;
+            border: 1px solid var(--border);
+            text-align: center;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            flex-shrink: 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .hourly-card:hover {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.12) 0%, rgba(16, 185, 129, 0.06) 100%);
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+        }
+
+        .hourly-time {
+            font-size: 0.7em;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+            letter-spacing: 0.5px;
+        }
+
+        .hourly-icon {
+            font-size: 1.5em;
+            margin: 4px 0;
+        }
+
+        .hourly-temp {
+            font-size: 0.95em;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .hourly-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4px;
+            margin-top: 8px;
+        }
+
+        .hourly-detail {
+            font-size: 0.6em;
+            color: var(--text-secondary);
+            padding: 2px 0;
+            white-space: nowrap;
+        }
+
+        .hourly-energy {
+            grid-column: 1 / -1;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(16, 185, 129, 0.08) 100%);
+            padding: 4px 6px;
+            border-radius: 4px;
+            margin-top: 4px;
+            font-size: 0.65em;
+            color: var(--primary);
+            font-weight: 600;
+            box-shadow: 0 1px 3px rgba(16, 185, 129, 0.1);
+        }
+
+        /* Daily Forecast */
+        .daily-grid {
+            display: grid;
+            gap: 5px;
+        }
+
+        .daily-card {
+            display: grid;
+            grid-template-columns: 1fr 0.6fr 1.8fr 1.2fr 1fr;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%);
+            border-radius: 7px;
+            border: 1px solid var(--border);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .daily-card:hover {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(16, 185, 129, 0.04) 100%);
+            border-color: var(--primary);
+            transform: translateX(2px);
+            box-shadow: 0 3px 8px rgba(16, 185, 129, 0.15);
+        }
+
+        .daily-day {
+            font-weight: 700;
+            font-size: 0.8em;
+            color: var(--text-primary);
+            letter-spacing: 0.3px;
+        }
+
+        .daily-icon {
+            font-size: 1.6em;
+            text-align: center;
+        }
+
+        .daily-temps {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .temp-range {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .temp-high {
+            font-size: 0.85em;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .temp-low {
+            font-size: 0.75em;
+            color: var(--text-secondary);
+        }
+
+        .daily-stats {
+            display: flex;
+            gap: 10px;
+            font-size: 0.7em;
+            color: var(--text-secondary);
+        }
+
+        .daily-detail {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .detail-label {
+            font-size: 0.65em;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            letter-spacing: 0.5px;
+        }
+
+        .detail-value {
+            font-weight: 700;
+            color: var(--text-primary);
+            font-size: 0.95em;
+        }
+
+        /* Automation Status */
+        .automation-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 12px;
+        }
+
+        .automation-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 16px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+        .automation-item:hover {
+            background: rgba(16, 185, 129, 0.05);
+            border-color: var(--primary);
+        }
+
+        .automation-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 500;
+        }
+
+        .automation-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 4px 12px;
+            background: rgba(16, 185, 129, 0.15);
+            border-radius: 12px;
+            font-size: 0.75em;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .status-icon {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--primary);
+            box-shadow: 0 0 8px var(--primary);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        /* Loading */
+        .loading {
+            text-align: center;
+            padding: 80px 20px;
+        }
+
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid rgba(16, 185, 129, 0.2);
+            border-top: 4px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            font-size: 1.2em;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        /* Sync Button */
+        .sync-btn {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.4);
+        }
+
+        .sync-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(16, 185, 129, 0.4);
+        }
+
+        .sync-btn:active {
+            transform: translateY(-1px);
+        }
+
+        .last-update {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.85em;
+            margin-top: 12px;
+        }
+
+        /* Live Clock */
+        .live-clock {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 3px;
+            padding: 6px 12px;
+            background: linear-gradient(-45deg, rgba(16, 185, 129, 0.15), rgba(59, 130, 246, 0.15), rgba(139, 92, 246, 0.1));
+            background-size: 400% 400%;
+            border-radius: 8px;
+            border: 1.5px solid rgba(16, 185, 129, 0.3);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 16px rgba(16, 185, 129, 0.12),
+                        inset 0 1px 1px rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            min-width: 120px;
+            overflow: hidden;
+            animation: gradientShift 6s ease infinite;
+        }
+
+        .live-clock::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg,
+                        transparent,
+                        rgba(255, 255, 255, 0.3),
+                        transparent);
+            animation: clockShimmer 3s infinite;
+            pointer-events: none;
+        }
+
+        .live-clock:hover {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 12px 40px rgba(16, 185, 129, 0.25),
+                        inset 0 1px 1px rgba(255, 255, 255, 0.15),
+                        0 0 20px rgba(59, 130, 246, 0.2);
+            border-color: rgba(16, 185, 129, 0.5);
+        }
+
+        .clock-time {
+            position: relative;
+            z-index: 1;
+            font-size: 16px;
+            font-weight: 900;
+            background: linear-gradient(90deg, var(--primary), var(--secondary), var(--primary));
+            background-size: 200% 100%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-variant-numeric: tabular-nums;
+            letter-spacing: -0.3px;
+            line-height: 1.1;
+            text-align: center;
+            white-space: nowrap;
+            filter: drop-shadow(0 2px 4px rgba(16, 185, 129, 0.2));
+            animation: gradientShift 4s ease infinite;
+        }
+
+        .clock-date {
+            position: relative;
+            z-index: 1;
+            font-size: 10px;
+            color: var(--text-primary);
+            opacity: 0.9;
+            font-weight: 700;
+            text-transform: capitalize;
+            letter-spacing: 0.2px;
+            line-height: 1.1;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        @keyframes clockShimmer {
+            0% {
+                left: -100%;
+            }
+            50% {
+                left: 100%;
+            }
+            100% {
+                left: 100%;
+            }
+        }
+
+        @keyframes gradientShift {
+            0%, 100% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+        }
+
+        @keyframes badgeShimmer {
+            0% {
+                left: -100%;
+            }
+            50% {
+                left: 100%;
+            }
+            100% {
+                left: 100%;
+            }
+        }
+
+        /* Responsive */
+        /* Standard Desktop (1366px - 1920px at 100% zoom) */
+        @media (min-width: 1366px) and (max-width: 1920px) {
+            body {
+                font-size: 13px;
+            }
+
+            .container {
+                padding: 8px 14px;
+            }
+
+            .card {
+                padding: 10px 12px;
+            }
+
+            .temp-value {
+                font-size: 2.4em;
+            }
+
+            .temp-icon {
+                font-size: 2.6em;
+            }
+
+            .stat-value {
+                font-size: 1.2em;
+            }
+        }
+
+        @media (max-width: 1400px) {
+            .weather-main { grid-column: span 12; }
+            .air-quality-panel { grid-column: span 12; }
+            .energy-panel { grid-column: span 12; }
+
+            .rotating-section,
+            .rotating-section.active {
+                padding: 0;
+            }
+
+            .container {
+                padding: 12px 16px;
+            }
+        }
+
+        /* Tablet */
+        @media (max-width: 1024px) {
+            .top-nav {
+                padding: 12px 18px;
+            }
+
+            .brand-title {
+                font-size: 1.8em;
+            }
+
+            .brand-subtitle {
+                font-size: 0.95em;
+            }
+
+            .clock-time {
+                font-size: 1.8em;
+            }
+
+            .partner-logos-nav {
+                gap: 10px;
+            }
+
+            .partner-logo-nav {
+                height: 46px;
+                max-width: 107px;
+            }
+        }
+
+        /* Mobile */
+        @media (max-width: 768px) {
+            .container { padding: 12px 16px; }
+
+            .rotating-section,
+            .rotating-section.active {
+                gap: 12px;
+                padding: 0;
+            }
+
+            .top-nav {
+                flex-direction: column;
+                gap: 16px;
+                padding: 16px;
+            }
+
+            .brand {
+                flex-direction: column;
+                gap: 16px;
+                text-align: center;
+            }
+
+            .brand-logo {
+                height: 61px;
+            }
+
+            .brand-title {
+                font-size: 1.6em;
+            }
+
+            .brand-subtitle {
+                font-size: 0.9em;
+            }
+
+            .status-badges {
+                flex-direction: column;
+                gap: 12px;
+                width: 100%;
+            }
+
+            .live-clock {
+                align-items: center;
+                width: 100%;
+            }
+
+            .clock-time {
+                font-size: 2em;
+            }
+
+            .badge {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .partner-logos-nav {
+                margin-left: 0;
+                padding-left: 0;
+                border-left: none;
+                border-top: 2px solid rgba(16, 185, 129, 0.25);
+                padding-top: 16px;
+                width: 100%;
+                justify-content: center;
+            }
+
+            .partner-logo-nav {
+                height: 42px;
+            }
+
+            .weather-current { grid-template-columns: 1fr; }
+            .daily-card {
+                grid-template-columns: 1fr;
+                gap: 12px;
+                text-align: center;
+            }
+
+            /* Rotation indicator adjustments for mobile */
+            .rotation-indicator {
+                bottom: 16px;
+                right: 16px;
+                padding: 10px 16px;
+                font-size: 13px;
+            }
+        }
+
+        /* Extra small mobile devices */
+        @media (max-width: 480px) {
+            body {
+                font-size: 14px;
+            }
+
+            .card {
+                padding: 12px;
+            }
+
+            .card-title {
+                font-size: 0.9em;
+            }
+        }
+
+        /* Touch device improvements */
+        @media (hover: none) and (pointer: coarse) {
+            /* Larger touch targets for better usability */
+            button, a, [onclick] {
+                min-height: 44px;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            /* Better tap highlight */
+            .badge {
+                -webkit-tap-highlight-color: rgba(16, 185, 129, 0.2);
+            }
+        }
+
+        /* Reduced motion for accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+
+            .status-dot::before {
+                animation: none;
+            }
+
+            .badge::before {
+                animation: none;
+            }
+        }
+
+        /* Large Desktop (1600px - QHD/1440p displays) */
+        @media (min-width: 1600px) and (max-width: 2559px) {
+            .container {
+                max-width: 2000px;
+                padding: 32px;
+            }
+
+            .card {
+                padding: 32px;
+                border-radius: 20px;
+            }
+
+            .card-header {
+                margin-bottom: 24px;
+            }
+
+            .card-title {
+                font-size: 1.1em;
+            }
+
+            .grid {
+                gap: 28px;
+            }
+
+            .top-nav {
+                padding: 18px 27px;
+            }
+
+            .brand-logo {
+                height: 88px;
+            }
+
+            .brand-title {
+                font-size: 2.3em;
+            }
+        }
+
+        /* TV Display Optimization (1920px - 4K) */
+        @media (min-width: 1920px) and (min-height: 1080px) {
+            /* Increase base font sizes for TV readability from distance */
+            body {
+                font-size: 18px;
+            }
+
+            .container {
+                max-width: 2400px;
+                padding: 32px;
+            }
+
+            /* Larger brand and navigation for TV */
+            .brand-title {
+                font-size: 2.5em;
+            }
+
+            .brand-subtitle {
+                font-size: 1.3em;
+            }
+
+            .brand-logo {
+                height: 100px;
+            }
+
+            .partner-logo-nav {
+                height: 58px;
+                max-width: 131px;
+            }
+
+            /* Larger cards and spacing for TV viewing distance */
+            .card {
+                padding: 32px;
+                border-radius: 20px;
+            }
+
+            .card-title {
+                font-size: 1.3em;
+            }
+
+            /* Weather display larger for TV */
+            .temp-value {
+                font-size: 5em;
+            }
+
+            .temp-icon {
+                font-size: 6em;
+            }
+
+            .stat-value {
+                font-size: 2.2em;
+            }
+
+            .stat-label {
+                font-size: 0.85em;
+            }
+
+            /* Larger badges for TV */
+            .badge {
+                padding: 12px 20px;
+                font-size: 1.1em;
+            }
+
+            /* Better spacing in grid for TV */
+            .grid {
+                gap: 32px;
+                margin-bottom: 32px;
+            }
+        }
+
+        /* Ultrawide Display Optimization (2560px+, 21:9 and wider) */
+        @media (min-width: 2560px) {
+            .container {
+                max-width: 3200px;
+                padding: 48px;
+            }
+
+            /* Optimize grid for ultrawide - use horizontal space better */
+            .weather-main {
+                grid-column: span 5;
+                min-height: 600px;
+            }
+
+            .air-quality-panel {
+                grid-column: span 4;
+                min-height: 600px;
+            }
+
+            .energy-panel {
+                grid-column: span 3;
+                min-height: 600px;
+            }
+
+            /* Ensure weather stats use ultrawide space efficiently */
+            .weather-stats {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 24px;
+            }
+
+            /* Larger spacing for ultrawide */
+            .grid {
+                gap: 32px;
+                margin-bottom: 32px;
+            }
+
+            .card {
+                padding: 40px;
+                border-radius: 24px;
+            }
+
+            .card-header {
+                margin-bottom: 28px;
+                padding-bottom: 20px;
+            }
+
+            .card-header::after {
+                width: 80px;
+                height: 3px;
+            }
+
+            .card-title {
+                font-size: 1.15em;
+                letter-spacing: 1px;
+            }
+
+            /* Adjust top navigation for ultrawide */
+            .top-nav {
+                padding: 21px 36px;
+                border-radius: 20px;
+            }
+
+            .brand-logo {
+                height: 92px;
+            }
+
+            .brand-title {
+                font-size: 2.4em;
+            }
+
+            /* Better proportions for large content */
+            .temp-value {
+                font-size: 4.5em;
+            }
+
+            .stat-value {
+                font-size: 2em;
+            }
+        }
+
+        /* Super Ultrawide (32:9 and 5K+ displays) */
+        @media (min-width: 3440px) {
+            .container {
+                max-width: 4200px;
+                padding: 56px;
+            }
+
+            body {
+                font-size: 20px;
+            }
+
+            /* Even better horizontal space utilization - equal columns */
+            .weather-main {
+                grid-column: span 4;
+                min-height: 700px;
+            }
+
+            .air-quality-panel {
+                grid-column: span 4;
+                min-height: 700px;
+            }
+
+            .energy-panel {
+                grid-column: span 4;
+                min-height: 700px;
+            }
+
+            /* Multi-column layouts for super ultrawide */
+            .weather-stats {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 28px;
+            }
+
+            .grid {
+                gap: 40px;
+                margin-bottom: 40px;
+            }
+
+            .card {
+                padding: 48px;
+                border-radius: 28px;
+            }
+
+            .card-header {
+                margin-bottom: 32px;
+                padding-bottom: 24px;
+            }
+
+            .card-header::after {
+                width: 100px;
+                height: 4px;
+            }
+
+            .card-title {
+                font-size: 1.25em;
+                letter-spacing: 1.2px;
+            }
+
+            .top-nav {
+                padding: 24px 42px;
+                border-radius: 24px;
+            }
+
+            .brand-logo {
+                height: 100px;
+            }
+
+            .brand-title {
+                font-size: 2.6em;
+            }
+
+            .temp-value {
+                font-size: 5em;
+            }
+
+            .stat-value {
+                font-size: 2.2em;
+            }
+        }
+
+        /* 4K and 8K TV Displays (Ultra High Resolution) */
+        @media (min-width: 3840px) {
+            .container {
+                max-width: 5200px;
+                padding: 64px;
+            }
+
+            body {
+                font-size: 24px;
+            }
+
+            /* Equal column layout for 4K */
+            .weather-main,
+            .air-quality-panel,
+            .energy-panel {
+                grid-column: span 4;
+                min-height: 800px;
+            }
+
+            .brand-title {
+                font-size: 3.2em;
+            }
+
+            .brand-logo {
+                height: 115px;
+            }
+
+            .temp-value {
+                font-size: 6.5em;
+            }
+
+            .temp-icon {
+                font-size: 7.5em;
+            }
+
+            .card-title {
+                font-size: 1.4em;
+                letter-spacing: 1.5px;
+            }
+
+            .stat-value {
+                font-size: 2.8em;
+            }
+
+            /* Maximum spacing for 4K/8K displays */
+            .grid {
+                gap: 48px;
+                margin-bottom: 48px;
+            }
+
+            .card {
+                padding: 56px;
+                border-radius: 32px;
+            }
+
+            .card-header {
+                margin-bottom: 36px;
+                padding-bottom: 28px;
+            }
+
+            .card-header::after {
+                width: 120px;
+                height: 4px;
+            }
+
+            .top-nav {
+                padding: 27px 48px;
+                border-radius: 28px;
+            }
+
+            .weather-stats {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 32px;
+            }
+        }
+
+        /* Ensure content doesn't get too stretched on extreme aspect ratios */
+        @media (min-aspect-ratio: 21/9) {
+            .container {
+                /* Center content and prevent over-stretching */
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            /* Add subtle side padding for extreme widths */
+            .grid {
+                padding-left: 2vw;
+                padding-right: 2vw;
+            }
+        }

@@ -1,0 +1,48 @@
+{
+  "name": "brico-dave-analytics",
+  "version": "1.0.0",
+  "description": "Professional Building Analytics & Environmental Monitoring Dashboard for Brico Marché Davézieux",
+  "main": "server.js",
+  "scripts": {
+    "start": "cross-env NODE_ENV=production node server.js",
+    "dev": "cross-env NODE_ENV=development node server.js",
+    "dev:watch": "cross-env NODE_ENV=development nodemon server.js",
+    "test": "echo \"No tests yet\" && exit 0",
+    "docker:build": "docker build -t brico-dave-analytics .",
+    "docker:run": "docker run -p 3001:3001 brico-dave-analytics",
+    "docker:compose": "docker-compose up -d",
+    "docker:stop": "docker-compose down",
+    "lint": "echo \"No linter configured\" && exit 0"
+  },
+  "keywords": [
+    "brico-dave",
+    "bricomarche",
+    "davezieux",
+    "building-analytics",
+    "dashboard",
+    "weather",
+    "izitgreen",
+    "hvac-monitoring",
+    "energy-management",
+    "environmental-monitoring",
+    "iot",
+    "smart-building"
+  ],
+  "author": "Brico Dave Analytics Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/brico-dave-analytics"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "node-fetch": "^3.3.2"
+  },
+  "devDependencies": {
+    "cross-env": "^10.1.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  }
+}

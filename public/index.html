@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion Énergétique • Daveyzieux - Tableau de Bord</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/images/Logo.png">
+
+    <!-- External Dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+    <!-- External Stylesheets -->
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Top Navigation -->
+        <div class="top-nav">
+            <div class="brand">
+                <div class="brand-logo">
+                    <img src="/images/Logo.png" alt="Bricomarché Logo">
+                </div>
+                <div class="brand-text">
+                    <div class="brand-title">Gestion Énergétique • Daveyzieux</div>
+                    <div class="brand-subtitle">Tableau de Bord</div>
+                </div>
+            </div>
+            <div class="status-badges">
+                <div class="live-clock">
+                    <div class="clock-time" id="liveTime">--:--:--</div>
+                    <div class="clock-date" id="liveDate">Chargement...</div>
+                </div>
+                <div class="badge">
+                    <div class="status-dot"></div>
+                    <span id="izitStatus">Batiment Connecté</span>
+                </div>
+                <div class="badge">
+                    <span>⚡</span>
+                    <span>Surveillance en Direct</span>
+                </div>
+                <div class="partner-logos-nav">
+                    <img src="/images/Logo.png" alt="Brico Marche Logo" class="partner-logo-nav">
+                </div>
+            </div>
+        </div>
+
+        <!-- Fixed Header Cards (GTB + Store Hours) -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; width: 100%;">
+            <!-- GTB Information Banner -->
+            <div class="card" style="padding: 13px 14px; background: linear-gradient(135deg, rgba(16, 185, 129, 0.12), rgba(59, 130, 246, 0.08)); border: 2px solid rgba(16, 185, 129, 0.35);">
+                <div style="display: flex; align-items: center; gap: 13px; margin-bottom: 11px; padding-bottom: 7px; border-bottom: 1.5px solid rgba(16, 185, 129, 0.2);">
+                    <div style="font-size: 2.5em; filter: drop-shadow(0 0 12px rgba(16, 185, 129, 0.6));">🏢</div>
+                    <div style="flex: 1;">
+                        <div style="display: flex; align-items: center; gap: 7px; margin-bottom: 4px;">
+                            <h2 style="font-size: 1.04em; font-weight: 800; color: #FFFFFF; margin: 0; line-height: 1; letter-spacing: -0.3px;">Bâtiment Connecté</h2>
+                            <span style="font-size: 0.56em; padding: 3px 7px; background: rgba(16, 185, 129, 0.25); border-radius: 4px; color: #FFFFFF; font-weight: 800;">✓ ACTIF</span>
+                        </div>
+                        <p style="font-size: 0.68em; line-height: 1.3; color: #9CA3AF; margin: 0; font-weight: 600;">Ce bâtiment est équipé d'une Gestion Technique du Bâtiment, assurant une surveillance et un contrôle optimaux de tous les systèmes énergétiques</p>
+                    </div>
+                </div>
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 9px;">
+                    <div style="display: flex; align-items: center; gap: 9px; padding: 11px 13px; background: rgba(16, 185, 129, 0.08); border-radius: 6px; border: 1.5px solid rgba(16, 185, 129, 0.2);">
+                        <span style="font-size: 1.8em;">🌡️</span>
+                        <div style="line-height: 1.3;">
+                            <div style="font-size: 0.63em; color: #9CA3AF; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px;">Climatisation</div>
+                            <div style="font-size: 0.9em; font-weight: 800; color: #FFFFFF;">4 Trane</div>
+                        </div>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 9px; padding: 11px 13px; background: rgba(16, 185, 129, 0.08); border-radius: 6px; border: 1.5px solid rgba(16, 185, 129, 0.2);">
+                        <span style="font-size: 1.8em;">⚡</span>
+                        <div style="line-height: 1.3;">
+                            <div style="font-size: 0.63em; color: #9CA3AF; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px;">Optimisation</div>
+                            <div style="font-size: 0.9em; font-weight: 800; color: #FFFFFF;">-23% CO₂</div>
+                        </div>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 9px; padding: 11px 13px; background: rgba(16, 185, 129, 0.08); border-radius: 6px; border: 1.5px solid rgba(16, 185, 129, 0.2);">
+                        <span style="font-size: 1.8em;">📡</span>
+                        <div style="line-height: 1.3;">
+                            <div style="font-size: 0.63em; color: #9CA3AF; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px;">Sondes</div>
+                            <div style="font-size: 0.9em; font-weight: 800; color: #FFFFFF;">7 capteurs</div>
+                        </div>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 9px; padding: 11px 13px; background: rgba(16, 185, 129, 0.08); border-radius: 6px; border: 1.5px solid rgba(16, 185, 129, 0.2);">
+                        <span style="font-size: 1.8em;">📊</span>
+                        <div style="line-height: 1.3;">
+                            <div style="font-size: 0.63em; color: #9CA3AF; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px;">Supervision</div>
+                            <div style="font-size: 0.9em; font-weight: 800; color: #FFFFFF;">24/7</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Store Hours -->
+            <div class="card" style="padding: 9px 11px; background: linear-gradient(135deg, rgba(59, 130, 246, 0.12), rgba(16, 185, 129, 0.08)); border: 2px solid rgba(59, 130, 246, 0.35);">
+                <div style="display: flex; align-items: center; gap: 9px; margin-bottom: 7px; padding-bottom: 5px; border-bottom: 1.5px solid rgba(59, 130, 246, 0.2);">
+                    <div style="font-size: 1.8em;">🕐</div>
+                    <div style="flex: 1;">
+                        <h2 style="font-size: 1.08em; font-weight: 800; color: #FFFFFF; margin: 0 0 3px 0; line-height: 1; letter-spacing: -0.3px;">Horaires du Magasin</h2>
+                        <div id="currentDayStatus" style="display: flex; align-items: baseline; gap: 4px; flex-wrap: wrap;">
+                            <span id="currentDayName" style="font-size: 0.86em; font-weight: 800; color: #FFFFFF;">--</span>
+                            <span id="currentDayHours" style="font-size: 0.9em; font-weight: 800; color: #FFFFFF;">--</span>
+                            <span id="storeStatus" style="padding: 2px 5px; border-radius: 3px; font-size: 0.63em; font-weight: 800; display: inline-block;">--</span>
+                        </div>
+                    </div>
+                </div>
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; margin-bottom: 7px;">
+                    <div id="hours-monday" style="display: flex; flex-direction: column; align-items: center; padding: 5px 5px; background: rgba(16, 185, 129, 0.08); border-radius: 4px; border: 1.5px solid rgba(16, 185, 129, 0.2);">
+                        <span style="font-size: 0.77em; font-weight: 800; color: #FFFFFF; margin-bottom: 2px;">Lun</span>
+                        <span style="font-size: 0.72em; font-weight: 800; color: #FFFFFF; line-height: 1.2; text-align: center;">9-12<br>14-19</span>
+                    </div>
+                    <div id="hours-tuesday" style="display: flex; flex-direction: column; align-items: center; padding: 5px 5px; background: rgba(16, 185, 129, 0.08); border-radius: 4px; border: 1.5px solid rgba(16, 185, 129, 0.2);">
+                        <span style="font-size: 0.77em; font-weight: 800; color: #FFFFFF; margin-bottom: 2px;">Mar</span>
+                        <span style="font-size: 0.72em; font-weight: 800; color: #FFFFFF; line-height: 1.2; text-align: center;">9-12<br>14-19</span>
+                    </div>
+                    <div id="hours-wednesday" style="display: flex; flex-direction: column; align-items: center; padding: 5px 5px; background: rgba(16, 185, 129, 0.08); border-radius: 4px; border: 1.5px solid rgba(16, 185, 129, 0.2);">
+                        <span style="font-size: 0.77em; font-weight: 800; color: #FFFFFF; margin-bottom: 2px;">Mer</span>
+                        <span style="font-size: 0.72em; font-weight: 800; color: #FFFFFF; line-height: 1.2; text-align: center;">9-12<br>14-19</span>
+                    </div>
+                    <div id="hours-thursday" style="display: flex; flex-direction: column; align-items: center; padding: 5px 5px; background: rgba(16, 185, 129, 0.08); border-radius: 4px; border: 1.5px solid rgba(16, 185, 129, 0.2);">
+                        <span style="font-size: 0.77em; font-weight: 800; color: #FFFFFF; margin-bottom: 2px;">Jeu</span>
+                        <span style="font-size: 0.72em; font-weight: 800; color: #FFFFFF; line-height: 1.2; text-align: center;">9-12<br>14-19</span>
+                    </div>
+                    <div id="hours-friday" style="display: flex; flex-direction: column; align-items: center; padding: 5px 5px; background: rgba(16, 185, 129, 0.08); border-radius: 4px; border: 1.5px solid rgba(16, 185, 129, 0.2);">
+                        <span style="font-size: 0.77em; font-weight: 800; color: #FFFFFF; margin-bottom: 2px;">Ven</span>
+                        <span style="font-size: 0.72em; font-weight: 800; color: #FFFFFF; line-height: 1.2; text-align: center;">9-12<br>14-19</span>
+                    </div>
+                    <div id="hours-saturday" style="display: flex; flex-direction: column; align-items: center; padding: 5px 5px; background: rgba(16, 185, 129, 0.08); border-radius: 4px; border: 1.5px solid rgba(16, 185, 129, 0.2);">
+                        <span style="font-size: 0.77em; font-weight: 800; color: #FFFFFF; margin-bottom: 2px;">Sam</span>
+                        <span style="font-size: 0.72em; font-weight: 800; color: #FFFFFF; line-height: 1.2; text-align: center;">9-19</span>
+                    </div>
+                    <div id="hours-sunday" style="display: flex; flex-direction: column; align-items: center; padding: 5px 5px; background: rgba(239, 68, 68, 0.1); border-radius: 4px; border: 1.5px solid rgba(239, 68, 68, 0.3); grid-column: span 3;">
+                        <span style="font-size: 0.77em; font-weight: 800; color: #FFFFFF; display: flex; align-items: center; gap: 3px; margin-bottom: 2px;"><span style="font-size: 1em;">🔒</span>Dimanche</span>
+                        <span style="font-size: 0.77em; font-weight: 800; color: #FFFFFF;">Fermé</span>
+                    </div>
+                </div>
+                <div style="padding: 5px 7px; background: rgba(59, 130, 246, 0.08); border-radius: 4px; border: 1.5px solid rgba(59, 130, 246, 0.2); font-size: 0.68em; line-height: 1.4;">
+                    <div style="display: flex; gap: 4px; margin-bottom: 3px; align-items: center;">
+                        <span style="font-size: 1em;">📍</span>
+                        <div style="flex: 1; font-weight: 800; color: #FFFFFF;">94 chemin du mas, 07430 Daveyzieux</div>
+                    </div>
+                    <div style="display: flex; gap: 4px; align-items: center;">
+                        <span style="font-size: 1em;">☎️</span>
+                        <div style="font-weight: 800; color: #FFFFFF;">04 75 67 63 63</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loading State -->
+        <div id="loading" class="loading">
+            <div class="loading-spinner"></div>
+            <div class="loading-text">Chargement des Données Environnementales...</div>
+        </div>
+
+        <!-- Main Dashboard -->
+        <div id="dashboard" style="display: none;">
+            <!-- Rotating Section 1: Weather & Air Quality -->
+            <div class="rotating-section active" id="section-1">
+                <!-- Weather Display -->
+                <div class="card weather-main">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <span class="card-icon">🌡️</span>
+                            <span>Conditions Météorologiques Actuelles</span>
+                        </div>
+                    </div>
+                    <div class="weather-current">
+                        <div class="temp-display">
+                            <div class="temp-icon" id="weatherIcon">☀️</div>
+                            <div class="temp-info">
+                                <div class="temp-value" id="temperature">--°</div>
+                                <div class="temp-desc" id="weatherDesc">Chargement...</div>
+                            </div>
+                        </div>
+                        <div class="weather-stats">
+                            <div class="stat-item">
+                                <div class="stat-label">Ressenti</div>
+                                <div class="stat-value"><span id="feelsLike">--</span><span class="stat-unit">°C</span></div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-label">Humidité</div>
+                                <div class="stat-value"><span id="humidity">--</span><span class="stat-unit">%</span></div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-label">Vitesse Vent</div>
+                                <div class="stat-value"><span id="windSpeed">--</span><span class="stat-unit">km/h</span></div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-label">Pression</div>
+                                <div class="stat-value"><span id="pressure">--</span><span class="stat-unit">hPa</span></div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-label">Indice UV</div>
+                                <div class="stat-value"><span id="uvIndex">--</span></div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-label">Couverture Nuageuse</div>
+                                <div class="stat-value"><span id="cloudCover">--</span><span class="stat-unit">%</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Air Quality Panel -->
+                <div class="card air-quality-panel">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <span class="card-icon">🌍</span>
+                            <span>Qualité de l'Air</span>
+                        </div>
+                    </div>
+                    <div class="aqi-display">
+                        <div class="aqi-label">Indice de Qualité de l'Air</div>
+                        <div class="aqi-value"><span id="aqiValue">--</span></div>
+                        <div class="aqi-status" id="aqiStatus">Chargement...</div>
+                    </div>
+                    <div class="aqi-components">
+                        <div class="aqi-component">
+                            <div class="aqi-component-label">
+                                <span>💨</span>
+                                <span>PM2.5</span>
+                            </div>
+                            <div class="aqi-component-value"><span id="pm25">--</span> μg/m³</div>
+                        </div>
+                        <div class="aqi-component">
+                            <div class="aqi-component-label">
+                                <span>🌫️</span>
+                                <span>PM10</span>
+                            </div>
+                            <div class="aqi-component-value"><span id="pm10">--</span> μg/m³</div>
+                        </div>
+                        <div class="aqi-component">
+                            <div class="aqi-component-label">
+                                <span>🏭</span>
+                                <span>NO₂</span>
+                            </div>
+                            <div class="aqi-component-value"><span id="no2">--</span> μg/m³</div>
+                        </div>
+                        <div class="aqi-component">
+                            <div class="aqi-component-label">
+                                <span>☁️</span>
+                                <span>O₃</span>
+                            </div>
+                            <div class="aqi-component-value"><span id="o3">--</span> μg/m³</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Energy Panel -->
+                <div class="card energy-panel">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <span class="card-icon">⚡</span>
+                            <span>Consommation d'Énergie</span>
+                        </div>
+                    </div>
+                    <div class="energy-consumption">
+                        <div class="energy-breakdown">
+                            <div class="energy-item">
+                                <div class="energy-item-label">
+                                    <span>🌡️</span>
+                                    <span>CVC</span>
+                                </div>
+                                <div class="energy-item-value"><span id="energyHvac">--</span> kW</div>
+                            </div>
+                            <div class="energy-item">
+                                <div class="energy-item-label">
+                                    <span>💡</span>
+                                    <span>Éclairage</span>
+                                </div>
+                                <div class="energy-item-value"><span id="energyLighting">21.8</span> kWh/h</div>
+                            </div>
+                            <div class="energy-item">
+                                <div class="energy-item-label">
+                                    <span>⛽</span>
+                                    <span>Gaz</span>
+                                </div>
+                                <div class="energy-item-value"><span id="energyGas">--</span> m³/h</div>
+                            </div>
+                        </div>
+                        <!-- Total Energy Consumption -->
+                        <div style="margin-top: 20px; padding-top: 20px; border-top: 2px solid var(--primary);">
+                            <div class="energy-item" style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(16, 185, 129, 0.05)); padding: 16px; border-radius: 12px; border: 2px solid var(--primary);">
+                                <div class="energy-item-label" style="font-size: 1.1em; font-weight: 700;">
+                                    <span>📊</span>
+                                    <span>TOTAL ÉNERGIE</span>
+                                </div>
+                                <div class="energy-item-value" style="font-size: 1.4em; font-weight: 700; color: var(--primary);">
+                                    <span id="energyTotal">--</span> <span style="font-size: 0.7em;">kWh/h</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Rotating Section 2: Trane Units & Energy -->
+            <div class="rotating-section" id="section-2">
+                <!-- Rooftop Trane Units -->
+                <div class="card" style="grid-column: span 12;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 2px solid rgba(16, 185, 129, 0.2);">
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <span style="font-size: 1.4em;">🏢</span>
+                            <span style="font-size: 1em; font-weight: 800; color: var(--primary);">Unités Trane en Toiture</span>
+                        </div>
+                    </div>
+                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;">
+                        <!-- Trane Unit 1 -->
+                        <div style="padding: 10px; background: rgba(16, 185, 129, 0.05); border-radius: 8px; border: 1px solid rgba(16, 185, 129, 0.2);">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                                <div style="font-size: 0.75em; font-weight: 700; color: var(--text-primary);">RTU-01 (Nord)</div>
+                                <div style="padding: 2px 5px; background: rgba(16, 185, 129, 0.25); border-radius: 3px; font-size: 0.55em; font-weight: 700; color: var(--primary);">ACTIF</div>
+                            </div>
+                            <div style="font-size: 2em; font-weight: 800; color: var(--primary); margin-bottom: 4px; line-height: 1;">
+                                <span id="traneTemp1">--</span>
+                                <span style="font-size: 0.5em; margin-left: 2px;">°C</span>
+                            </div>
+                            <div id="traneStatus1" style="font-size: 0.6em; color: var(--text-secondary); margin-bottom: 6px; line-height: 1.2;">❄️ Mode Chauffage</div>
+                            <div style="padding-top: 6px; border-top: 1px solid rgba(16, 185, 129, 0.2);">
+                                <div style="font-size: 0.55em; color: var(--text-secondary); font-weight: 600; margin-bottom: 3px;">Conso Élec.</div>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2px; font-size: 0.6em;">
+                                    <div style="color: var(--text-secondary);">Act:</div>
+                                    <div id="rftp1Current" style="color: var(--primary); font-weight: 700; text-align: right;">--</div>
+                                    <div style="color: var(--text-secondary);">Moy:</div>
+                                    <div id="rftp1Avg" style="color: var(--text-primary); font-weight: 600; text-align: right;">--</div>
+                                    <div style="color: var(--text-secondary);">Min:</div>
+                                    <div id="rftp1Min" style="color: var(--text-primary); font-weight: 600; text-align: right;">--</div>
+                                    <div style="color: var(--text-secondary);">Max:</div>
+                                    <div id="rftp1Max" style="color: var(--text-primary); font-weight: 600; text-align: right;">--</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Trane Unit 2 -->
+                        <div style="padding: 10px; background: rgba(16, 185, 129, 0.05); border-radius: 8px; border: 1px solid rgba(16, 185, 129, 0.2);">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                                <div style="font-size: 0.75em; font-weight: 700; color: var(--text-primary);">RTU-02 (Sud)</div>
+                                <div style="padding: 2px 5px; background: rgba(16, 185, 129, 0.25); border-radius: 3px; font-size: 0.55em; font-weight: 700; color: var(--primary);">ACTIF</div>
+                            </div>
+                            <div style="font-size: 2em; font-weight: 800; color: var(--primary); margin-bottom: 4px; line-height: 1;">
+                                <span id="traneTemp2">--</span>
+                                <span style="font-size: 0.5em; margin-left: 2px;">°C</span>
+                            </div>
+                            <div id="traneStatus2" style="font-size: 0.6em; color: var(--text-secondary); margin-bottom: 6px; line-height: 1.2;">❄️ Mode Chauffage</div>
+                            <div style="padding-top: 6px; border-top: 1px solid rgba(16, 185, 129, 0.2);">
+                                <div style="font-size: 0.55em; color: var(--text-secondary); font-weight: 600; margin-bottom: 3px;">Conso Élec.</div>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2px; font-size: 0.6em;">
+                                    <div style="color: var(--text-secondary);">Act:</div>
+                                    <div id="rftp2Current" style="color: var(--primary); font-weight: 700; text-align: right;">--</div>
+                                    <div style="color: var(--text-secondary);">Moy:</div>
+                                    <div id="rftp2Avg" style="color: var(--text-primary); font-weight: 600; text-align: right;">--</div>
+                                    <div style="color: var(--text-secondary);">Min:</div>
+                                    <div id="rftp2Min" style="color: var(--text-primary); font-weight: 600; text-align: right;">--</div>
+                                    <div style="color: var(--text-secondary);">Max:</div>
+                                    <div id="rftp2Max" style="color: var(--text-primary); font-weight: 600; text-align: right;">--</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Trane Unit 3 -->
+                        <div style="padding: 10px; background: rgba(16, 185, 129, 0.05); border-radius: 8px; border: 1px solid rgba(16, 185, 129, 0.2);">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                                <div style="font-size: 0.75em; font-weight: 700; color: var(--text-primary);">RTU-03 (Est)</div>
+                                <div style="padding: 2px 5px; background: rgba(16, 185, 129, 0.25); border-radius: 3px; font-size: 0.55em; font-weight: 700; color: var(--primary);">ACTIF</div>
+                            </div>
+                            <div style="font-size: 2em; font-weight: 800; color: var(--primary); margin-bottom: 4px; line-height: 1;">
+                                <span id="traneTemp3">--</span>
+                                <span style="font-size: 0.5em; margin-left: 2px;">°C</span>
+                            </div>
+                            <div id="traneStatus3" style="font-size: 0.6em; color: var(--text-secondary); margin-bottom: 6px; line-height: 1.2;">❄️ Mode Chauffage</div>
+                            <div style="padding-top: 6px; border-top: 1px solid rgba(16, 185, 129, 0.2);">
+                                <div style="font-size: 0.55em; color: var(--text-secondary); font-weight: 600; margin-bottom: 3px;">Conso Élec.</div>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2px; font-size: 0.6em;">
+                                    <div style="color: var(--text-secondary);">Act:</div>
+                                    <div id="rftp3Current" style="color: var(--primary); font-weight: 700; text-align: right;">--</div>
+                                    <div style="color: var(--text-secondary);">Moy:</div>
+                                    <div id="rftp3Avg" style="color: var(--text-primary); font-weight: 600; text-align: right;">--</div>
+                                    <div style="color: var(--text-secondary);">Min:</div>
+                                    <div id="rftp3Min" style="color: var(--text-primary); font-weight: 600; text-align: right;">--</div>
+                                    <div style="color: var(--text-secondary);">Max:</div>
+                                    <div id="rftp3Max" style="color: var(--text-primary); font-weight: 600; text-align: right;">--</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Trane Unit 4 -->
+                        <div style="padding: 10px; background: rgba(16, 185, 129, 0.05); border-radius: 8px; border: 1px solid rgba(16, 185, 129, 0.2);">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                                <div style="font-size: 0.75em; font-weight: 700; color: var(--text-primary);">RTU-04 (Ouest)</div>
+                                <div style="padding: 2px 5px; background: rgba(16, 185, 129, 0.25); border-radius: 3px; font-size: 0.55em; font-weight: 700; color: var(--primary);">ACTIF</div>
+                            </div>
+                            <div style="font-size: 2em; font-weight: 800; color: var(--primary); margin-bottom: 4px; line-height: 1;">
+                                <span id="traneTemp4">--</span>
+                                <span style="font-size: 0.5em; margin-left: 2px;">°C</span>
+                            </div>
+                            <div id="traneStatus4" style="font-size: 0.6em; color: var(--text-secondary); margin-bottom: 6px; line-height: 1.2;">❄️ Mode Chauffage</div>
+                            <div style="padding-top: 6px; border-top: 1px solid rgba(16, 185, 129, 0.2);">
+                                <div style="font-size: 0.55em; color: var(--text-secondary); font-weight: 600; margin-bottom: 3px;">Conso Élec.</div>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2px; font-size: 0.6em;">
+                                    <div style="color: var(--text-secondary);">Act:</div>
+                                    <div id="rftp4Current" style="color: var(--primary); font-weight: 700; text-align: right;">--</div>
+                                    <div style="color: var(--text-secondary);">Moy:</div>
+                                    <div id="rftp4Avg" style="color: var(--text-primary); font-weight: 600; text-align: right;">--</div>
+                                    <div style="color: var(--text-secondary);">Min:</div>
+                                    <div id="rftp4Min" style="color: var(--text-primary); font-weight: 600; text-align: right;">--</div>
+                                    <div style="color: var(--text-secondary);">Max:</div>
+                                    <div id="rftp4Max" style="color: var(--text-primary); font-weight: 600; text-align: right;">--</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Total Consumption Card -->
+                    <div style="grid-column: span 12; margin-top: 12px; padding: 12px; background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(16, 185, 129, 0.03)); border-radius: 12px; border: 2px solid var(--primary);">
+                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <span style="font-size: 1.4em;">⚡</span>
+                                <span style="font-size: 0.9em; font-weight: 800; color: var(--primary); text-transform: uppercase; letter-spacing: 1px;">Total Consommation CVC</span>
+                            </div>
+                            <div style="text-align: right;">
+                                <div style="font-size: 0.6em; color: var(--text-secondary); font-weight: 600;">Actuel</div>
+                                <div style="font-size: 2em; font-weight: 800; color: var(--primary); line-height: 1;">
+                                    <span id="rftpTotalCurrent">--</span>
+                                    <span style="font-size: 0.5em; margin-left: 4px;">kW</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Statistics Grid -->
+                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;">
+                            <div style="text-align: center; padding: 8px; background: rgba(16, 185, 129, 0.08); border-radius: 6px; border: 1px solid rgba(16, 185, 129, 0.2);">
+                                <div style="font-size: 0.6em; color: var(--text-secondary); font-weight: 600; margin-bottom: 2px;">📊 Moyenne</div>
+                                <div style="font-size: 1.2em; font-weight: 700; color: var(--text-primary);">
+                                    <span id="rftpTotalAvg">--</span>
+                                    <span style="font-size: 0.6em; margin-left: 2px; color: var(--text-secondary);">kW</span>
+                                </div>
+                            </div>
+                            <div style="text-align: center; padding: 8px; background: rgba(59, 130, 246, 0.08); border-radius: 6px; border: 1px solid rgba(59, 130, 246, 0.2);">
+                                <div style="font-size: 0.6em; color: var(--text-secondary); font-weight: 600; margin-bottom: 2px;">📉 Minimum</div>
+                                <div style="font-size: 1.2em; font-weight: 700; color: #3b82f6;">
+                                    <span id="rftpTotalMin">--</span>
+                                    <span style="font-size: 0.6em; margin-left: 2px; color: var(--text-secondary);">kW</span>
+                                </div>
+                            </div>
+                            <div style="text-align: center; padding: 8px; background: rgba(245, 158, 11, 0.08); border-radius: 6px; border: 1px solid rgba(245, 158, 11, 0.2);">
+                                <div style="font-size: 0.6em; color: var(--text-secondary); font-weight: 600; margin-bottom: 2px;">📈 Maximum</div>
+                                <div style="font-size: 1.2em; font-weight: 700; color: #f59e0b;">
+                                    <span id="rftpTotalMax">--</span>
+                                    <span style="font-size: 0.6em; margin-left: 2px; color: var(--text-secondary);">kW</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Rotating Section 3: Temperature Sensors -->
+            <div class="rotating-section" id="section-3">
+                <!-- Temperature Sensors Graphs -->
+                <div class="card" style="grid-column: span 12;">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <span class="card-icon">🌡️</span>
+                            <span>Température Extérieure & Sondes Rooftop Surface de Vente</span>
+                        </div>
+                    </div>
+                    <div id="tempSensorsStatus" style="text-align: center; padding: 6px; border-radius: 6px; background: rgba(16, 185, 129, 0.1); color: var(--primary); font-size: 0.75em; font-weight: 600; margin-bottom: 10px;">
+                        Prêt à charger
+                    </div>
+                    <!-- Statistics Grid -->
+                    <div id="tempSensorsStats" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px; margin-bottom: 12px;">
+                        <!-- Stats will be populated by JavaScript -->
+                    </div>
+                    <!-- Single Combined Chart -->
+                    <div style="position: relative; height: 250px; background: rgba(255, 255, 255, 0.02); border-radius: 8px; padding: 12px; border: 1px solid var(--border);">
+                        <canvas id="combinedTempChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Rotating Section 4: Forecasts -->
+            <div class="rotating-section" id="section-4">
+                <!-- Combined Forecasts -->
+                <div class="card forecast-container">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <span class="card-icon">⏰</span>
+                            <span style="font-size: 0.7em;">Prévision 24h & Prédiction Énergétique & Prévision Météo 7 Jours</span>
+                        </div>
+                    </div>
+
+                    <!-- 24-Hour Forecast -->
+                    <div class="forecast-section">
+                        <div class="hourly-scroll" id="hourlyForecast">
+                            <!-- Populated by JavaScript -->
+                        </div>
+                    </div>
+
+                    <!-- 7-Day Forecast -->
+                    <div class="forecast-section" style="margin-top: 12px;">
+                        <div style="font-size: 0.8em; font-weight: 700; color: var(--text-secondary); margin-bottom: 8px; padding-left: 4px; text-transform: uppercase; letter-spacing: 0.5px;">
+                            <span style="color: var(--primary);">📅</span> Prochains 7 Jours
+                        </div>
+                        <div class="daily-grid" id="dailyForecast">
+                            <!-- Populated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Rotation Indicator -->
+            <div class="rotation-indicator" role="status" aria-live="polite" aria-label="Indicateur de section">
+                <span>Section</span>
+                <div class="rotation-dots">
+                    <div class="rotation-dot active" aria-label="Section 1"></div>
+                    <div class="rotation-dot" aria-label="Section 2"></div>
+                    <div class="rotation-dot" aria-label="Section 3"></div>
+                    <div class="rotation-dot" aria-label="Section 4"></div>
+                </div>
+            </div>
+
+            <div class="last-update" role="status" aria-live="polite">
+                Dernière mise à jour : <span id="lastUpdate">--</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- External JavaScript -->
+    <script src="/js/app.js"></script>
+</body>
+</html>
