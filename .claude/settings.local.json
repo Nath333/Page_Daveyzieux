@@ -78,7 +78,8 @@
       "Bash(git restore:*)",
       "Bash(docker:*)",
       "Bash(cmd /c dir /b \"c:\\Users\\natha\\Desktop\\App_Izit\\Page_Daveyzieux\\docs\\*.md\")",
-      "Bash(del \"c:\\Users\\natha\\Desktop\\App_Izit\\Page_Daveyzieux\\docs\\INDEX.md\" \"c:\\Users\\natha\\Desktop\\App_Izit\\Page_Daveyzieux\\docs\\CODE-DOCUMENTATION.md\" \"c:\\Users\\natha\\Desktop\\App_Izit\\Page_Daveyzieux\\docs\\PROJECT_STRUCTURE.md\" \"c:\\Users\\natha\\Desktop\\App_Izit\\Page_Daveyzieux\\docs\\SRC_README.md\" \"c:\\Users\\natha\\Desktop\\App_Izit\\Page_Daveyzieux\\docs\\SCRIPTS_README.md\" \"c:\\Users\\natha\\Desktop\\App_Izit\\Page_Daveyzieux\\docs\\DEPLOYMENT_DIR_README.md\" \"c:\\Users\\natha\\Desktop\\App_Izit\\Page_Daveyzieux\\docs\\TESTS_README.md\" \"c:\\Users\\natha\\Desktop\\App_Izit\\Page_Daveyzieux\\public\\README.md\")"
+      "Bash(del \"c:\\Users\\natha\\Desktop\\App_Izit\\Page_Daveyzieux\\docs\\INDEX.md\" \"c:\\Users\\natha\\Desktop\\App_Izit\\Page_Daveyzieux\\docs\\CODE-DOCUMENTATION.md\" \"c:\\Users\\natha\\Desktop\\App_Izit\\Page_Daveyzieux\\docs\\PROJECT_STRUCTURE.md\" \"c:\\Users\\natha\\Desktop\\App_Izit\\Page_Daveyzieux\\docs\\SRC_README.md\" \"c:\\Users\\natha\\Desktop\\App_Izit\\Page_Daveyzieux\\docs\\SCRIPTS_README.md\" \"c:\\Users\\natha\\Desktop\\App_Izit\\Page_Daveyzieux\\docs\\DEPLOYMENT_DIR_README.md\" \"c:\\Users\\natha\\Desktop\\App_Izit\\Page_Daveyzieux\\docs\\TESTS_README.md\" \"c:\\Users\\natha\\Desktop\\App_Izit\\Page_Daveyzieux\\public\\README.md\")",
+      "Bash(gh auth:*)"
     ],
     "deny": [],
     "ask": []
