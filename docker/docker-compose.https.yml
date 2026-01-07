@@ -1,58 +1,15 @@
 version: '3.8'
 
+# Simplified config - Host nginx handles SSL, Docker just runs the app
 services:
-  # Certbot for Let's Encrypt SSL certificates
-  certbot:
-    image: certbot/certbot:latest
-    container_name: page-daveyzieux-certbot
-    volumes:
-      - ./certbot/conf:/etc/letsencrypt
-      - ./certbot/www:/var/www/certbot
-    # Auto-renew certificates every 12 hours
-    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew --quiet; sleep 12h & wait $${!}; done;'"
-    networks:
-      - app-network
-    restart: unless-stopped
-
-  # Nginx reverse proxy with HTTPS
-  nginx:
-    build:
-      context: ..
-      dockerfile: docker/nginx/https/Dockerfile
-    container_name: page-daveyzieux-nginx-https
-    ports:
-      - "80:80"    # HTTP (redirect to HTTPS + certbot challenges)
-      - "443:443"  # HTTPS
-    volumes:
-      - ./nginx/https/nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./certbot/conf:/etc/letsencrypt:ro
-      - ./certbot/www:/var/www/certbot:ro
-    depends_on:
-      app:
-        condition: service_healthy
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
-      interval: 30s
-      timeout: 3s
-      start_period: 10s
-      retries: 3
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"
-        max-file: "3"
-    networks:
-      - app-network
-
   # Node.js application
   app:
     build:
       context: ..
       dockerfile: docker/app/Dockerfile
-    container_name: page-daveyzieux-app
-    expose:
-      - "3001"
+    container_name: mrbrico-app
+    ports:
+      - "127.0.0.1:3002:3001"  # Expose to localhost only (host nginx proxies here)
     environment:
       - NODE_ENV=production
       - PORT=3001
@@ -72,9 +29,3 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
-    networks:
-      - app-network
-
-networks:
-  app-network:
-    driver: bridge
